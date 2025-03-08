@@ -1,15 +1,17 @@
-package com.ddfinv.ddfinvestment;
+package com.ddfinv;
 
-import org.junit.jupiter.api.Test;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
-@Import(TestcontainersConfiguration.class)
+import com.ddfinv.core.DdfInvestmentApplication;
+
 @SpringBootTest
+@Import(TestcontainersConfiguration.class)
 class DdfInvestmentApplicationTests {
-
-    @Test
-    void contextLoads() {
+    public static void main(String[] args) {
+        SpringApplication.from(DdfInvestmentApplication::main)
+                .with(TestcontainersConfiguration.class)
+                .run(args);
     }
-
 }

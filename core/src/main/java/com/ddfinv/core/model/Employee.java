@@ -1,6 +1,11 @@
 package com.ddfinv.core.model;
 
-public class FirmModels {
+
+
+
+
+public class Employee{
+
 }
 
 
@@ -28,6 +33,10 @@ use std::str::FromStr;
 // firm_models.rs module definitions begin here:
 // ********************************************
 //
+
+
+
+
 
 // Roles in the system
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize, Hash)]

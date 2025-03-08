@@ -529,7 +529,8 @@ impl ClientHandler {
 ///* `completed: bool` - holds the status of the transaction
 ///
 ///
-pub struct Transaction<'a> {
+///
+/*pub struct Transaction<'a> {
     db: &'a mut Box<dyn DatabaseManager>,
     completed: bool,
 }
@@ -575,34 +576,7 @@ impl<'a> Transaction<'a> {
     ///     on success:
     ///         Ok(()) - the transaction successfully initiated
     ///     on fail:
-    ///         ApplicationError - returned upon failure to commit the transactio
-    ///                 and/or changes to the split data sources
-    ///
-    // Note: do not use reference to mutable here
-    pub fn commit(mut self) -> Result<(), ApplicationError> {
-        self.db.commit_transaction()?;
-        self.completed = true;
-        Ok(())
-    }
-}
-/// Implementing Drop with lifetime 'a for Transaction
-///
-/// Checks if the transaction is completed.
-/// If not completed, and the transaction is out of scope, drop
-/// is called using the db instance before the memory for lifetime 'a
-/// has been cleaned up.
-impl<'a> Drop for Transaction<'a> {
-    /// Drop the transaction if changes arent committed
-    ///
-    /// This function gets called  if a  particular transaction
-    /// somehow goes out of scope. If the transaction did not commit,
-    /// this functino will roll it back
-    ///
-    ///# Arguments
-    ///
-    /// * `&mut self` - mutable reference to the transaction
-    ///
-    ///# Returns
+
     ///
     ///
     fn drop(&mut self) {

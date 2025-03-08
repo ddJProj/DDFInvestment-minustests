@@ -1,6 +1,8 @@
-package com.ddfinv.ddfinvestment;
+package com.ddfinv;
 
 import org.springframework.boot.SpringApplication;
+
+import com.ddfinv.core.DdfInvestmentApplication;
 
 public class TestDdfInvestmentApplication {
 
