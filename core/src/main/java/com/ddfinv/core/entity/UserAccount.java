@@ -75,7 +75,7 @@ public class UserAccount {
     public UserAccount(String email, String password, String firstName, String lastName){
         this.email = email;
         // TODO: implement the hashpassword method / class / interface
-        this.hashedPassword = hashPassword(password);
+        this.hashedPassword = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = Role.guest; 
@@ -93,7 +93,7 @@ public class UserAccount {
     /**
      * Setter for the email attribute of an useraccount instance
      */
-    private void setEmail(String newEmail){
+    public void setEmail(String newEmail){
         this.email = newEmail;
     }
     /**
@@ -107,7 +107,7 @@ public class UserAccount {
     /**
      * Setter for the firstName attribute of an useraccount instance
      */
-    private void setFirstName(String newFirstName){
+    public void setFirstName(String newFirstName){
         this.firstName = newFirstName;
     }
 
@@ -122,7 +122,7 @@ public class UserAccount {
     /**
      * Setter for the lastName attribute of an useraccount instance
      */
-    private void setLastName(String newLastName){
+    public void setLastName(String newLastName){
         this.lastName = newLastName;
     }
 
@@ -137,7 +137,23 @@ public class UserAccount {
     /**
      * Setter for the Role attribute of an useraccount instance
      */
-    private void setRole(Role newRole){
+    public void setRole(Role newRole){
         this.role = newRole;
+    }
+    /**
+     * Getter for the stored hashed password attribute of a useraccount instance
+     * @return String hashedPassword - the stored hashedPassword of an account
+     */
+    public String getHashedPassword() {
+        return this.hashedPassword;
+    }
+  
+    /**
+     * Setter for the stored hashed password attribute of an useraccount instance
+     */  
+    public void setHashedPassword(String password) {
+        // TODO Auto-generated method stub
+        this.hashedPassword= password;
+        throw new UnsupportedOperationException("Unimplemented method 'setPassword'");
     }
 }

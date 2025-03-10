@@ -1,4 +1,4 @@
-package com.ddfinv.core.model.user;
+package com.ddfinv.core.rustfiles.user;
 
 public class Permission {
 

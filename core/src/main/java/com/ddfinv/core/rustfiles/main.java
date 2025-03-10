@@ -1,4 +1,4 @@
-package com.ddfinv.core.model;
+package com.ddfinv.core.rustfiles;
 
 public class main {
 

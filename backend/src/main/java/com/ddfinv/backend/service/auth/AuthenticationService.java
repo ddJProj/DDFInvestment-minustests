@@ -1,9 +1,13 @@
-package com.ddfinv.core.service;
+package com.ddfinv.backend.service.auth;
 import java.lang.Object;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordE
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 public class AuthenticationService {
 
-    private final PasswordEncoder pwEncoder;
+    //private final PasswordEncoder pwEncoder;i
     
     public String hashPassword(String password){
         // TODO: 
@@ -16,6 +20,7 @@ public class AuthenticationService {
     }
 
     private String validateString(String passwordString){
+  /*
         try{
 
         }catch(exception e){
@@ -24,6 +29,8 @@ public class AuthenticationService {
 
         return validatedString;
     }
-
+*/
+    return passwordString;
     // FIXME: ADD a validation / sanitization step for a provided user password.
+}
 }
