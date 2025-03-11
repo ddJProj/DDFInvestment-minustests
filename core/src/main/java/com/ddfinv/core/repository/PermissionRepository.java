@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface PermissionRepository extends JpaRepository<Permission, Long>{
 
     /**
-     * Locate a permission by it's name
+     * Locate/retrieve a permission by it's name
      * 
      * @param name
      * @return Optional permission, returned if found

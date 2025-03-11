@@ -39,3 +39,5 @@ public class InitializePermissionsService {
         }
     }
 }
+
+//TODO : finish documentation

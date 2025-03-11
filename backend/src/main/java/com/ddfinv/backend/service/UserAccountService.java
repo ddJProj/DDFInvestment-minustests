@@ -33,7 +33,14 @@ public class UserAccountService {
         this.rolePermissionService = new RolePermissionService();
     }
 
-    
+    /**
+     * 
+     * @param email
+     * @param password
+     * @param firstName
+     * @param lastName
+     * @return
+     */
     @Transactional
     public UserAccount createNewUserAccount(String email, String password, String firstName, String lastName){
         UserAccount newAccount = new UserAccount();
@@ -49,6 +56,11 @@ public class UserAccountService {
         return newAccount;
     }
 
+    /**
+     * 
+     * @param userAccount
+     * @param role
+     */
     @Transactional
     public void assignUserRole(UserAccount userAccount, Role role){
         userAccount.setRole(role);
@@ -63,18 +75,37 @@ public class UserAccountService {
         userAccount.setPermissions(basePermisions);
     }
 
+    /**
+     * 
+     * @param userAccount
+     * @param role
+     * @return
+     */
     @Transactional
     public UserAccount modifyUserAccountRole(UserAccount userAccount, Role role){
         assignUserRole(userAccount, role);
         return userAccount;
     }
 
+    /**
+     * 
+     * @param email
+     * @return
+     */
     public UserAccount findByEmail(String email){
         return userAccountRepository.findByEmail(email)
             .orElse(null);
     }
 
+    /**
+     * 
+     * @param userAccount
+     * @return
+     */
     public UserAccount saveUserAccount(UserAccount userAccount){
         return userAccountRepository.save(userAccount);
     }
 }
+
+
+//TODO : finish documentation
