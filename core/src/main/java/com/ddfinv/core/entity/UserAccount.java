@@ -74,7 +74,6 @@ public class UserAccount {
      */
     public UserAccount(String email, String password, String firstName, String lastName){
         this.email = email;
-        // TODO: implement the hashpassword method / class / interface
         this.hashedPassword = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -140,6 +139,23 @@ public class UserAccount {
     public void setRole(Role newRole){
         this.role = newRole;
     }
+
+    /**
+     * Getter for the role attribute of a useraccount instance
+     * @return Role role - the role value of an account
+     */
+    public Set<Permission> getPermissions(){
+       return this.permissions;
+    }
+
+    /**
+     * Setter for the Role attribute of an useraccount instance
+     */
+    public void setPermissions(Set<Permission> permissions){
+        this.permissions = permissions;
+    }
+
+
     /**
      * Getter for the stored hashed password attribute of a useraccount instance
      * @return String hashedPassword - the stored hashedPassword of an account
@@ -152,8 +168,6 @@ public class UserAccount {
      * Setter for the stored hashed password attribute of an useraccount instance
      */  
     public void setHashedPassword(String password) {
-        // TODO Auto-generated method stub
-        this.hashedPassword= password;
-        throw new UnsupportedOperationException("Unimplemented method 'setPassword'");
+        this.hashedPassword = password;
     }
 }
