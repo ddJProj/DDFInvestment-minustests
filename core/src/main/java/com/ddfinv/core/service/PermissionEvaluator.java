@@ -3,6 +3,14 @@ package com.ddfinv.core.service;
 import com.ddfinv.core.entity.UserAccount;
 
 public interface PermissionEvaluator {
-    // to check if the required permission to work with a resource is held by a UserAccount
+
+    /**
+     *  check if the required permission to work with a resource is held by a UserAccount
+     *  
+     * @param userAccount
+     * @param permissionName
+     * @param resourceObject
+     * @return boolean true if permission is held, else false
+     */
     boolean hasPermission(UserAccount userAccount, String permissionName, Object resourceObject);
 }

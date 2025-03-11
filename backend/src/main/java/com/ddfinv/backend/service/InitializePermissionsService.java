@@ -23,18 +23,19 @@ public class InitializePermissionsService {
     public void initializePermissions(){
 
         List<Permission> basePermissions = Arrays.asList(
-        new Permission("VIEW_ACCOUNT", "View the details of an account."),
-        new Permission("EDIT_ACCOUNT", "Edit the details of an account."),
-        new Permission("VIEW_CLIENT", "View the details of a specific client."),
-        new Permission("EDIT_CLIENT", "Edit the details of a specific client."),
-        new Permission("VIEW_INVESTMENT", "View the details of a speecific investment."),
-        new Permission("NEW_INVESTMENT", "Define the details of a new investment."),
-        new Permission("VIEW_PUBLIC_INFO", "View publically accessible information.")
+            new Permission("VIEW_ACCOUNT", "View the details of an account."),
+            new Permission("EDIT_ACCOUNT", "Edit the details of an account."),
+            new Permission("VIEW_CLIENT", "View the details of a specific client."),
+            new Permission("EDIT_CLIENT", "Edit the details of a specific client."),
+            new Permission("VIEW_INVESTMENT", "View the details of a speecific investment."),
+            new Permission("NEW_INVESTMENT", "Define the details of a new investment."),
+            new Permission("VIEW_PUBLIC_INFO", "View publically accessible information.")
         );
-    for (Permission permission : basePermissions){
-        if (permissionRepository.findByName(permission.getName()) == null){
-            permissionRepository.save(permission);
+
+        for (Permission permission : basePermissions){
+            if (!permissionRepository.existsByName(permission.getName())){
+                permissionRepository.save(permission);
+            }
         }
-    }
     }
 }
