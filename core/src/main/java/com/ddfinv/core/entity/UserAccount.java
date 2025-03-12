@@ -22,7 +22,7 @@ import jakarta.persistence.Table;
 @Table(name="useraccount")
 public class UserAccount {
     
-    @Column(name="userid")
+    @Column(name="user_id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

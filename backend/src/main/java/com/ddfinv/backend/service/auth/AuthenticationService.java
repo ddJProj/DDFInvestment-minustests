@@ -15,6 +15,7 @@ import com.ddfinv.backend.exception.InvalidPasswordException;
 public class AuthenticationService {
 
     private final PasswordEncoder pwEncoder;
+    // regex pattern for input found at :
     // https://stackoverflow.com/questions/3802192/regexp-java-for-password-validation
     private static final Pattern VALID_PATTERN = 
         Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$");
