@@ -1,5 +1,6 @@
 package com.ddfinv.backend.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,5 +14,10 @@ public class InvestmentController {
     private final InvestmentService investmentService;
     private final PermissionHandlerService permissionHandlerService;
 
-    
+    @Autowired
+    public InvestmentController(InvestmentService investmentService, PermissionHandlerService permissionHandlerService){
+        this.investmentService = investmentService;
+        this.permissionHandlerService = permissionHandlerService;
+
+    }
 }

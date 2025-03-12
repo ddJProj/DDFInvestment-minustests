@@ -19,7 +19,7 @@ public class DTOMapper {
     /**
      * 
      * @param entity - the UserAccount entity to map to DTO
-     * @return dto - the newly mapped dto 
+     * @return UserAccountDTO dto - the newly mapped dto 
      */
     public UserAccountDTO toDTO(UserAccount entity){
         if (entity == null){
@@ -41,14 +41,17 @@ public class DTOMapper {
         return dto;
     }
 
+    /**
+     * 
+     * @param dto - object to be mapped to a UserAccount entity
+     * @return UserAccount entity - the newly mapped UserAccount instance
+     */
     public UserAccount toEntity(UserAccountDTO dto){
         if (dto == null){
             return null;
         }
 
         UserAccount entity = new UserAccount();
-
-
 
         return entity;
     }

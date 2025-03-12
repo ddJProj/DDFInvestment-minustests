@@ -10,7 +10,7 @@ import lombok.Data;
  * Maps application entities to DTOs
  */
 @Data
- public class UserAccountDTO {
+public class UserAccountDTO {
 
 // TODO: DEFINE UserAccount data transfer object
     private long id;
@@ -40,7 +40,7 @@ import lombok.Data;
      */
     private Role role;
 
-
+    // simplified Set of permissionName strings
     private Set<String> permissionName;
 
 }

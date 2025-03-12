@@ -2,6 +2,8 @@ package com.ddfinv;
 
 import org.springframework.boot.SpringApplication;
 
+import com.ddfinv.backend.DdfInvestmentApplication;
+
 public class TestDdfInvestmentApplication {
 
     public static void main(String[] args) {

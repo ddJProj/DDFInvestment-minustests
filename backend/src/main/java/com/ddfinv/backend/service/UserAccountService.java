@@ -9,9 +9,13 @@ import com.ddfinv.core.service.RolePermissionService;
 
 import jakarta.transaction.Transactional;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
 import com.ddfinv.backend.dto.DTOMapper;
@@ -113,6 +117,18 @@ public class UserAccountService {
      * @param email
      * @return
      */
+    public UserAccountDTO findById(Long id){
+        return userAccountRepository.findById(id).map(dtoMapper::toDTO).orElseThrow(
+            () -> new ResourceNotFoundException("A UserAccount with this ID was not found: " + id));
+        
+    }
+
+
+    /**
+     * 
+     * @param email
+     * @return
+     */
     public UserAccount findByEmail(String email){
         return userAccountRepository.findByEmail(email)
             .orElse(null);
@@ -127,7 +143,13 @@ public class UserAccountService {
         return userAccountRepository.save(userAccount);
     }
 
-
+    /**
+     * Method for updating an existing UserAccount entity
+     * 
+     * @param id
+     * @param dto
+     * @return UserAccountDTO - newly mapped UserAccount entity to DTO
+     */
     @Transactional
     public UserAccountDTO updateUserAccount(Long id, UserAccountDTO dto){
         UserAccount storedUserAccount = userAccountRepository.findById(id).orElseThrow(
@@ -146,6 +168,18 @@ public class UserAccountService {
         UserAccount updatedUserAccount = userAccountRepository.save(storedUserAccount);
         return dtoMapper.toDTO(updatedUserAccount);
 
+    }
+
+    public List<UserAccountDTO> getAllUserAccounts(Role targetRole){
+        List<UserAccount> userList;
+
+        if (targetRole != null){
+            userList = userAccountRepository.findByRole(targetRole);
+        }else{
+            userList = userAccountRepository.findAll();
+        }
+
+        return userList.stream().map(dtoMapper::toDTO).collect(Collectors.toList());
     }
 }
 //TODO : finish documentation
