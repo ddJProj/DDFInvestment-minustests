@@ -80,7 +80,19 @@ public class UserAccount {
         this.role = Role.guest; 
     }
 
-
+    /**
+     * Getter for the id attribute of an useraccount instance
+     * @return Long id - the id value of an account
+     */
+    public Long getId(){
+       return this.id;
+    }
+    /**
+     * Setter for the id attribute of an useraccount instance
+     */
+    public void setId(Long id){
+        this.id = id;
+    }
 
     /**
      * Getter for the email attribute of an useraccount instance

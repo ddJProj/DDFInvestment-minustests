@@ -20,12 +20,23 @@ public class PermissionHandlerService {
         this.permissionEvaluator = permissionEvaluator;
         this.userAccountRepository = userAccountRepository;
     }
-    
+
+    /**
+     * 
+     * @param permissionName
+     * @return
+     */
     public boolean thisUserHasPermission(String permissionName){
         
         return thisUserHasPermission(permissionName, null);
     }
 
+    /**
+     * 
+     * @param permissionName
+     * @param resource
+     * @return
+     */
     public boolean thisUserHasPermission(String permissionName, Object resource){
         UserAccount thisUser = getThisUser();
         if (thisUser == null){
@@ -34,6 +45,10 @@ public class PermissionHandlerService {
         return permissionEvaluator.hasPermission(thisUser, permissionName, resource);
     }
 
+    /**
+     * 
+     * @return
+     */
     public UserAccount getThisUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()){
@@ -43,10 +58,23 @@ public class PermissionHandlerService {
         return userAccountRepository.findByEmail(loginName).orElse(null);
     }
 
+    /**
+     * 
+     * @param userAccountId
+     * @param permissionName
+     * @return
+     */
     public boolean thisUserHasPermission(Long userAccountId, String permissionName){
         return thisUserHasPermission(userAccountId, permissionName, null);
     }
 
+    /**
+     * 
+     * @param userAccountId
+     * @param permissionName
+     * @param resource
+     * @return
+     */
     public boolean thisUserHasPermission(Long userAccountId, String permissionName, Object resource){
         UserAccount userAccount = userAccountRepository.findById(userAccountId).orElse(null);
         if (userAccount == null){

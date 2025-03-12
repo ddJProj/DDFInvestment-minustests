@@ -1,8 +1,15 @@
 package com.ddfinv.backend.dto;
 
+import lombok.Data;
+
 /**
  * Maps application entities to DTOs
  */
+@Data
 public class PermissionDTO {
-// TODO: DEFINE permissions data transfer object
+    private Long id;
+    
+    private String name;
+
+    private String description;
 }

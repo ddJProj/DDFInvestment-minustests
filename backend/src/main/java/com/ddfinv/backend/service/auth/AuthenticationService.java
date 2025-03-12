@@ -3,6 +3,8 @@ package com.ddfinv.backend.service.auth;
 import java.lang.Object;
 import java.util.regex.Pattern;
 
+
+// https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/crypto/bcrypt/BCrypt.html
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +29,6 @@ public class AuthenticationService {
      */
     public String hashPassword(String password){
         // TODO: 
-        // FIXME: ADD the hash method here for provided password
 
         String validatedPassword = validateString(password);
 
@@ -53,6 +54,12 @@ public class AuthenticationService {
         return passwordString;
     }
 
+    /**
+     * 
+     * @param password
+     * @param hashedPassword
+     * @return
+     */
     public boolean authenticatePassword(String password, String hashedPassword){
         return pwEncoder.matches(password, hashedPassword);
     }

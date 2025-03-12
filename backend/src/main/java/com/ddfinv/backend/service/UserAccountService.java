@@ -14,7 +14,9 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.ddfinv.backend.dto.DTOMapper;
+import com.ddfinv.backend.dto.UserAccountDTO;
+import com.ddfinv.backend.exception.ResourceNotFoundException;
 import com.ddfinv.backend.service.auth.AuthenticationService;
 
 @Service
@@ -24,17 +26,38 @@ public class UserAccountService {
     private final PermissionRepository permissionRepository;
     private final RolePermissionService rolePermissionService;
     private final AuthenticationService authService;
+    private final DTOMapper dtoMapper;
 
     @Autowired
-    public UserAccountService (UserAccountRepository userAccountRepository, PermissionRepository permissionRepository, AuthenticationService authService){
+    public UserAccountService (UserAccountRepository userAccountRepository, PermissionRepository permissionRepository, AuthenticationService authService, DTOMapper dtoMapper){
         this.userAccountRepository = userAccountRepository;
         this.permissionRepository = permissionRepository;
         this.authService = authService;
+        this.dtoMapper = dtoMapper;
         this.rolePermissionService = new RolePermissionService();
     }
 
+    @Transactional
+    public UserAccountDTO createUserAcount(UserAccountDTO dto){
+        UserAccount user = dtoMapper.toEntity(dto);
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()){
+            user.setHashedPassword(authService.hashPassword(dto.getPassword()));
+        }
+        UserAccount storedAccount = userAccountRepository.save(user);
+
+        // tern to ensure defaul role/permissions are assigned to new user
+        assignUserRole(storedAccount, dto.getRole() != null ? dto.getRole() : Role.guest);
+
+        storedAccount = userAccountRepository.save(storedAccount);
+
+        return dtoMapper.toDTO(storedAccount);
+    }
+
+
+
+
     /**
-     * 
+     * old version pre DTO implementation 
      * @param email
      * @param password
      * @param firstName
@@ -43,17 +66,15 @@ public class UserAccountService {
      */
     @Transactional
     public UserAccount createNewUserAccount(String email, String password, String firstName, String lastName){
-        UserAccount newAccount = new UserAccount();
+        UserAccountDTO dto = new UserAccountDTO();
 
-        newAccount.setEmail(email);
-        newAccount.setHashedPassword(authService.hashPassword(password));
-        newAccount.setFirstName(firstName);
-        newAccount.setLastName(lastName);
-        
-        userAccountRepository.save(newAccount);
-        assignUserRole(newAccount, Role.guest);
+        dto.setEmail(email);
+        dto.setPassword(password);
+        dto.setFirstName(firstName);
+        dto.setLastName(lastName);
+        dto.setRole(Role.guest);
 
-        return newAccount;
+        return dtoMapper.toEntity(createUserAcount(dto));
     }
 
     /**
@@ -105,7 +126,26 @@ public class UserAccountService {
     public UserAccount saveUserAccount(UserAccount userAccount){
         return userAccountRepository.save(userAccount);
     }
+
+
+    @Transactional
+    public UserAccountDTO updateUserAccount(Long id, UserAccountDTO dto){
+        UserAccount storedUserAccount = userAccountRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("UserAccount with this ID value was not found: " + id));
+
+        if (dto.getEmail() != null) storedUserAccount.setEmail(dto.getEmail());
+        if (dto.getFirstName() != null) storedUserAccount.setFirstName(dto.getFirstName());
+        if (dto.getLastName() != null) storedUserAccount.setLastName(dto.getLastName());
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            storedUserAccount.setHashedPassword(authService.hashPassword(dto.getPassword()));
+        }
+        if (dto.getRole() != null && storedUserAccount.getRole() != dto.getRole()){
+            assignUserRole(storedUserAccount, dto.getRole());
+        }
+
+        UserAccount updatedUserAccount = userAccountRepository.save(storedUserAccount);
+        return dtoMapper.toDTO(updatedUserAccount);
+
+    }
 }
-
-
 //TODO : finish documentation
