@@ -5,6 +5,7 @@ import com.ddfinv.core.entity.enums.Role;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -53,6 +55,12 @@ public class UserAccount {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Employee employeeRole;
+
+    @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Client clientRole;
+
     /**
      * The set of permissions that this UserAccount holds, based on their role
      */
@@ -79,6 +87,39 @@ public class UserAccount {
         this.lastName = lastName;
         this.role = Role.guest; 
     }
+
+
+    /**
+     * Getter method for the employeee role entity for a UserAccount
+     * @return this instance of the Employee Role
+     */
+    public Employee getEmployee(){
+        return this.employeeRole;
+    }
+    /**
+     * Setter method for the Employee role entity 
+     * 
+     * @param employee - Employee entity instance to set for the UserAccount
+     */
+    public void setEmployeeRole(Employee employee){
+        this.employeeRole = employee;
+    }
+    /**
+     * Getter method for the client role entity for a UserAccount
+     * @return this instance of the Client Role
+     */
+    public Client getClient(){
+        return this.clientRole;
+    }
+    /**
+     * Setter method for the client role entity 
+     * 
+     * @param client - Client entity instance to set for the UserAccount
+     */
+    public void setClientRolee(Client client){
+        this.clientRole = client;
+    }
+
 
     /**
      * Getter for the id attribute of an useraccount instance
