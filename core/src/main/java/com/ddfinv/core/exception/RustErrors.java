@@ -1,7 +1,7 @@
-package com.ddfinv.core.exception;
+// package com.ddfinv.core.exception;
 
-public class RustErrors {
-}
+// public class RustErrors {
+// }
 
 /*
 

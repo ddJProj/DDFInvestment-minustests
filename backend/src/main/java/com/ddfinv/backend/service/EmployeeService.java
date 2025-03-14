@@ -10,6 +10,8 @@ import com.ddfinv.backend.dto.DTOMapper;
 import com.ddfinv.backend.dto.EmployeeDTO;
 import com.ddfinv.backend.repository.EmployeeRepository;
 import com.ddfinv.core.entity.Employee;
+import com.ddfinv.core.entity.UserAccount;
+import com.ddfinv.core.entity.enums.Role;
 import com.ddfinv.core.repository.UserAccountRepository;
 
 public class EmployeeService {
@@ -28,6 +30,22 @@ public class EmployeeService {
         this.dtoMapper = dtoMapper;
     }
 
+    @Transactional
+    public EmployeeDTO createNewEmployee(EmployeeDTO dto){
+        UserAccount userAccount =userAccountRepository.findById(dto.getUserAccountId()) 
+        .orElseThrow(()-> new RuntimeException("A UserAccount with that ID could not be found."));
+
+        userAccountService.assignUserRole(userAccount, Role.employee);
+
+        Employee newEmployee = new Employee();
+        newEmployee.setUserAccount(userAccount);
+        newEmployee.setEmployeeId(createNewEmployeeId(newEmployee));
+        newEmployee.setLocationId(dto.getLocationId());
+        newEmployee.setTitle(dto.getTitle());
+
+        Employee storedEmployee = employeeRepository.save(newEmployee);
+        return dtoMapper.toEmployeeDTO(storedEmployee);
+    }
 
     public String createNewEmployeeId(Employee employee){
         return "" + employee.getLocationId() + employee.getId() + "";

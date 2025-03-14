@@ -1,6 +1,6 @@
-package com.ddfinv.core.rustfiles.user;
+// package com.ddfinv.core.rustfiles.user;
 
-public class UserAccount {
+// public class UserAccount {
 
     
-}
+// }

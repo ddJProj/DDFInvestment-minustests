@@ -1,8 +1,8 @@
-package com.ddfinv.core.rustfiles.user;
+// package com.ddfinv.core.rustfiles.user;
 
-public class Permission {
+// public class Permission {
 
-}
+// }
 
 /*
  * 

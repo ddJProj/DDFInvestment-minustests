@@ -83,4 +83,9 @@ public class PermissionHandlerService {
         return permissionEvaluator.hasPermission(userAccount, permissionName, resource);
     }
 
+    public boolean currentUserHasPermission(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'currentUserHasPermission'");
+    }
+
 }

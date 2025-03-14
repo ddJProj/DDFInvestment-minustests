@@ -1,12 +1,12 @@
-package com.ddfinv.core.rustfiles;
+//package com.ddfinv.core.rustfiles;
 
 
 
 
 
-public class Employee{
+//public class Employee{
 
-}
+//}
 
 
 
