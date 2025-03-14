@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ddfinv.backend.service.auth.AuthenticationService;
+import com.ddfinv.core.entity.Client;
+import com.ddfinv.core.entity.Employee;
 import com.ddfinv.core.entity.Permission;
 import com.ddfinv.core.entity.UserAccount;
 
@@ -17,6 +19,7 @@ public class DTOMapper {
     }
 
     /**
+     * Maps a UserAccount entity to a DT Object
      * 
      * @param entity - the UserAccount entity to map to DTO
      * @return UserAccountDTO dto - the newly mapped dto 
@@ -56,4 +59,59 @@ public class DTOMapper {
         return entity;
     }
 
+    /**
+     * Maps a Employee entity to a DT Object
+     * 
+     * @param entity - the Employee entity to map to a DTO
+     * @return EmployeeDTO dto - the newly mapped dto 
+     */
+    public EmployeeDTO toEmployeeDTO(Employee entity){
+        if (entity==null) return null;
+
+        EmployeeDTO dto = new EmployeeDTO();
+        dto.setId(entity.getId());
+        dto.setEmployeeId(entity.getEmployeeId());
+        dto.setUserAccountId(entity.getUserAccount().getId());
+        dto.setFirstName(entity.getUserAccount().getFirstName());
+        dto.setLastName(entity.getUserAccount().getLastName());
+        dto.setEmail(entity.getUserAccount().getEmail());
+        dto.setLocationId(entity.getLocationId());
+        dto.setTitle(entity.getTitle());
+
+        if(entity.getClientList() != null && !entity.getClientList().isEmpty()){
+            dto.setAssignedClientList(
+                entity.getClientList().stream()
+                .map(Client::getClientId)
+                .collect(Collectors.toSet())
+            );
+        }
+        return dto;
+    }
+
+    /**
+     * Maps a Client entity to a DT Object
+     * @param entity - the Client entity to map to DTO
+     * @return ClientDTO dto - the newly mapped dto 
+     */
+    public ClientDTO toClientDTO(Client entity){
+        if (entity==null) return null;
+
+        ClientDTO dto = new ClientDTO();
+        dto.setId(entity.getId());
+        dto.setClientId(entity.getClientId());
+        dto.setUserAccountId(entity.getUserAccount().getId());
+        dto.setFirstName(entity.getUserAccount().getFirstName());
+        dto.setLastName(entity.getUserAccount().getLastName());
+        dto.setEmail(entity.getUserAccount().getEmail());
+
+        if(entity.getAssignedEmployee() != null){
+            dto.setAssignedEmployeeId(entity.getAssignedEmployee().getEmployeeId());
+            // create the concatenated first & last name to simplify dto
+            dto.setAssignedEmployeeName(
+                entity.getAssignedEmployee().getUserAccount().getFirstName() + 
+                " " + entity.getAssignedEmployee().getUserAccount().getLastName()
+            );
+        }
+        return dto;
+    }
 }

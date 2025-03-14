@@ -36,7 +36,9 @@ public class Employee {
     private String locationId;
     private String title;
 
-    public Employee(){}
+    public Employee(){
+        this.locationId = "USA";
+    }
 
     public Long getId(){
         return this.id;
@@ -67,7 +69,7 @@ public class Employee {
     public void setClientList(Set<Client> clientList){
         this.clientList = clientList;
     }
-    public String getLocation(){
+    public String getLocationId(){
         return this.locationId;
     }
 

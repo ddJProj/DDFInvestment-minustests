@@ -34,7 +34,6 @@ public class Client {
     // TODO: add any other attributes needed here
 
     public Client(){
-
     }
 
     public Long getId(){
@@ -46,6 +45,7 @@ public class Client {
     }
 
 
+    
     public String getClientId(){
         return this.clientId;
     }
@@ -59,7 +59,7 @@ public class Client {
         return this.userAccount;
     }
 
-    public void set(UserAccount userAccount){
+    public void setUserAccount(UserAccount userAccount){
         this.userAccount = userAccount;
     }
 
