@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ddfinv.backend.dto.EmployeeDTO;
@@ -31,7 +30,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createNewEmployeEntity(@ResponseBody EmployeeDTO employeeDTO){
+    public ResponseEntity<?> createNewEmployeEntity(@RequestBody EmployeeDTO employeeDTO){
         if (!permissionHandlerService.currentUserHasPermission("CREATE_EMPLOYEE")){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -78,6 +77,6 @@ public class EmployeeController {
         return ResponseEntity.ok(updatedEmployee);
     }
 
-    
+
 
 }
