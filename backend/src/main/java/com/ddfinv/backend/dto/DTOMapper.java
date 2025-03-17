@@ -13,6 +13,7 @@ import com.ddfinv.core.entity.UserAccount;
 public class DTOMapper {
 
     private final AuthenticationService authservice;
+
     @Autowired
     public DTOMapper(AuthenticationService authService){
         this.authservice = authService;

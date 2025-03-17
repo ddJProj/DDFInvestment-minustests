@@ -32,6 +32,11 @@ public class ClientController {
         this.permissionHandlerService = permissionHandlerService;
     }
 
+    /**
+     * 
+     * @param clientDTO
+     * @return
+     */
     @PostMapping
     public ResponseEntity<?> createNewEmployeEntity(@RequestBody ClientDTO clientDTO){
         if (!permissionHandlerService.currentUserHasPermission("CREATE_CLIENT")){
@@ -41,6 +46,10 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newClient);
     }
 
+    /**
+     * 
+     * @return
+     */
     @GetMapping
     public ResponseEntity<?> getAllClients(){
         if(!permissionHandlerService.currentUserHasPermission("VIEW_CLIENTS")){
@@ -50,6 +59,11 @@ public class ClientController {
         return ResponseEntity.ok(clientList);
     }
 
+    /**
+     * 
+     * @param assignClientDTO
+     * @return
+     */
     @PostMapping("/assign")
     public ResponseEntity<?> assignClientToEmployee(@RequestBody AssignClientDTO assignClientDTO){
         if (!permissionHandlerService.currentUserHasPermission("ASSIGN_CLIENT")){
@@ -60,16 +74,25 @@ public class ClientController {
     }
 
 
-
+    /**
+     * 
+     * @param employeeId
+     * @return
+     */
     @GetMapping("/by-employee/{employeeId}")
-    public ResponseEntity<?> getClientsByEmployeeId(@PathVariable String employieeId){
+    public ResponseEntity<?> getClientsByEmployeeId(@PathVariable String employeeId){
         if(!permissionHandlerService.currentUserHasPermission("VIEW_CLIENTS")){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        List<ClientDTO> clientList= clientService.getClientsByEmployeeId(employieeId);
+        List<ClientDTO> clientList= clientService.getClientsByEmployeeId(employeeId);
         return ResponseEntity.ok(clientList);
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientById(@PathVariable Long id){
         if (!permissionHandlerService.currentUserHasPermission("VIEW_CLIENT")){
@@ -80,6 +103,11 @@ public class ClientController {
         return ResponseEntity.ok(retrievedClient);
     }
 
+    /**
+     * 
+     * @param clientId
+     * @return
+     */
     @GetMapping("/client-id/{clientId}")
     public ResponseEntity<?> getClientByClientId(@PathVariable String clientId){
         if (!permissionHandlerService.currentUserHasPermission("VIEW_CLIENT")){
@@ -90,6 +118,12 @@ public class ClientController {
         return ResponseEntity.ok(retrievedClient);
     }
 
+    /**
+     * 
+     * @param id
+     * @param clientDTO
+     * @return
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateClientEntity(@PathVariable Long id, @RequestBody ClientDTO clientDTO){
         if (!permissionHandlerService.currentUserHasPermission("EDIT_CLIENT")){

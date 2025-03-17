@@ -29,6 +29,12 @@ public class EmployeeController {
         this.permissionHandlerService = permissionHandlerService;
     }
 
+    /**
+     * 
+     *
+     * @param employeeDTO
+     * @return
+     */
     @PostMapping
     public ResponseEntity<?> createNewEmployeEntity(@RequestBody EmployeeDTO employeeDTO){
         if (!permissionHandlerService.currentUserHasPermission("CREATE_EMPLOYEE")){
@@ -38,6 +44,10 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
     }
 
+    /**
+     * 
+     * @return
+     */
     @GetMapping
     public ResponseEntity<?> getAllEmployees(){
         if(!permissionHandlerService.currentUserHasPermission("VIEW_EMPLOYEES")){
@@ -47,6 +57,11 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeList);
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getEmployeeById(@PathVariable Long id){
         if (!permissionHandlerService.currentUserHasPermission("VIEW_EMPLOYEE")){
@@ -57,6 +72,11 @@ public class EmployeeController {
         return ResponseEntity.ok(retrievedEmployee);
     }
 
+    /**
+     * 
+     * @param employeeId
+     * @return
+     */
     @GetMapping("/employee-id/{employeeId}")
     public ResponseEntity<?> getEmployeeByEmployeeId(@PathVariable String employeeId){
         if (!permissionHandlerService.currentUserHasPermission("VIEW_EMPLOYEE")){
@@ -67,6 +87,12 @@ public class EmployeeController {
         return ResponseEntity.ok(retrievedEmployee);
     }
 
+    /**
+     * 
+     * @param id
+     * @param employeeDTO
+     * @return
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateEmployeEntity(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO){
         if (!permissionHandlerService.currentUserHasPermission("EDIT_EMPLOYEE")){
@@ -76,7 +102,5 @@ public class EmployeeController {
         EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
         return ResponseEntity.ok(updatedEmployee);
     }
-
-
 
 }
