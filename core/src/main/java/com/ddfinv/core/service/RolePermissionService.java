@@ -32,14 +32,17 @@ import com.ddfinv.core.entity.Permission;
                 return new HashSet<>(completePermissions);
 
             case employee:
-                addPermissionByName(permissions, completePermissions, "VIEW_CLIENT");
+                addPermissionByName(permissions, completePermissions, "CREATE_CLIENT");
                 addPermissionByName(permissions, completePermissions, "EDIT_CLIENT");
+                addPermissionByName(permissions, completePermissions, "VIEW_CLIENT");
+                addPermissionByName(permissions, completePermissions, "VIEW_CLIENTS");
+                addPermissionByName(permissions, completePermissions, "ASSIGN_CLIENT");
                 addPermissionByName(permissions, completePermissions, "VIEW_INVESTMENT");
                 addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
                 break;
 
             case client:
-                addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
+                addPermissionByName(permissions, completePermissions, "VIEW_CLIENT");
                 addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
                 addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
                 break;
