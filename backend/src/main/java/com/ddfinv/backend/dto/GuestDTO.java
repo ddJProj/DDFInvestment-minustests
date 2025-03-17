@@ -4,6 +4,8 @@ import java.util.Set;
 
 import lombok.Data;
 
+// TODO: do I need to add more? check guest requirements 
+
 public class GuestDTO {
     
     @Data
