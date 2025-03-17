@@ -2,7 +2,7 @@ package com.ddfinv.backend.dto;
 
 import java.util.Set;
 
-import com.ddfinv.core.entity.enums.Role;
+import com.ddfinv.core.domain.enums.Role;
 
 import lombok.Data;
 

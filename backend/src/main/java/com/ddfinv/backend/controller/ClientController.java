@@ -17,7 +17,7 @@ import com.ddfinv.backend.dto.AssignClientDTO;
 import com.ddfinv.backend.dto.ClientDTO;
 import com.ddfinv.backend.service.ClientService;
 import com.ddfinv.backend.service.PermissionHandlerService;
-import com.ddfinv.core.entity.Client;
+import com.ddfinv.core.domain.Client;
 
 @RestController
 @RequestMapping("/api/employees")

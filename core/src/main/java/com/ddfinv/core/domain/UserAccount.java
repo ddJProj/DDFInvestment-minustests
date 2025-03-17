@@ -1,9 +1,9 @@
-package com.ddfinv.core.entity;
-
-import com.ddfinv.core.entity.enums.Role;
+package com.ddfinv.core.domain;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.ddfinv.core.domain.enums.Role;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

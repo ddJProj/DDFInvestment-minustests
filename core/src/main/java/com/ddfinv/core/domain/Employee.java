@@ -1,4 +1,4 @@
-package com.ddfinv.core.entity;
+package com.ddfinv.core.domain;
 
 import java.util.HashSet;
 import java.util.Set;

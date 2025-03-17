@@ -1,13 +1,12 @@
 package com.ddfinv.core.service;
 
-import com.ddfinv.core.entity.enums.Role;
-import com.ddfinv.core.entity.UserAccount;
+import com.ddfinv.core.domain.Permission;
+import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Role;
 import com.ddfinv.core.repository.PermissionRepository;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import com.ddfinv.core.entity.Permission;
 
 
 /**

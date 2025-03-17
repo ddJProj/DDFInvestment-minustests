@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ddfinv.backend.service.auth.AuthenticationService;
-import com.ddfinv.core.entity.Client;
-import com.ddfinv.core.entity.Employee;
-import com.ddfinv.core.entity.Permission;
-import com.ddfinv.core.entity.UserAccount;
+import com.ddfinv.core.domain.Client;
+import com.ddfinv.core.domain.Employee;
+import com.ddfinv.core.domain.Permission;
+import com.ddfinv.core.domain.UserAccount;
 
 public class DTOMapper {
 

@@ -1,4 +1,4 @@
-package com.ddfinv.core.entity;
+package com.ddfinv.core.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

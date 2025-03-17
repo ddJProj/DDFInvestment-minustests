@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.ddfinv.core.entity.UserAccount;
-import com.ddfinv.core.entity.enums.Role;
+import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Role;
 
 @Repository
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {

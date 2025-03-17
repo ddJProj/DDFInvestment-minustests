@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.ddfinv.core.entity.UserAccount;
+import com.ddfinv.core.domain.UserAccount;
 import com.ddfinv.core.repository.UserAccountRepository;
 import com.ddfinv.core.service.PermissionEvaluator;
 

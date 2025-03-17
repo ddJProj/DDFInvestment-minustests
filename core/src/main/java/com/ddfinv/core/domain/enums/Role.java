@@ -1,4 +1,4 @@
-package com.ddfinv.core.entity.enums;
+package com.ddfinv.core.domain.enums;
 
 public enum Role {
     admin,

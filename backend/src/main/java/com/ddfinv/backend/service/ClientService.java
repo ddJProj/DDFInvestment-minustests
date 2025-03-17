@@ -13,10 +13,10 @@ import com.ddfinv.backend.dto.ClientDTO;
 import com.ddfinv.backend.dto.DTOMapper;
 import com.ddfinv.backend.repository.ClientRepository;
 import com.ddfinv.backend.repository.EmployeeRepository;
-import com.ddfinv.core.entity.Client;
-import com.ddfinv.core.entity.Employee;
-import com.ddfinv.core.entity.UserAccount;
-import com.ddfinv.core.entity.enums.Role;
+import com.ddfinv.core.domain.Client;
+import com.ddfinv.core.domain.Employee;
+import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Role;
 import com.ddfinv.core.repository.UserAccountRepository;
 
 // import jakarta.transaction.Transactional;

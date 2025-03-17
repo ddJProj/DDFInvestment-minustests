@@ -1,7 +1,8 @@
 package com.ddfinv.backend.service;
 
+import com.ddfinv.core.domain.Permission;
 import com.ddfinv.core.repository.PermissionRepository;
-import com.ddfinv.core.entity.Permission;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

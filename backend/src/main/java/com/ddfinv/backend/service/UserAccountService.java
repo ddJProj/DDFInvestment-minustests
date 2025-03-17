@@ -1,8 +1,8 @@
 package com.ddfinv.backend.service;
 
-import com.ddfinv.core.entity.Permission;
-import com.ddfinv.core.entity.UserAccount;
-import com.ddfinv.core.entity.enums.Role;
+import com.ddfinv.core.domain.Permission;
+import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Role;
 import com.ddfinv.core.repository.PermissionRepository;
 import com.ddfinv.core.repository.UserAccountRepository;
 import com.ddfinv.core.service.RolePermissionService;

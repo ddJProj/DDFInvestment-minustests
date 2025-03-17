@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ddfinv.backend.dto.DTOMapper;
 import com.ddfinv.backend.dto.EmployeeDTO;
 import com.ddfinv.backend.repository.EmployeeRepository;
-import com.ddfinv.core.entity.Employee;
-import com.ddfinv.core.entity.UserAccount;
-import com.ddfinv.core.entity.enums.Role;
+import com.ddfinv.core.domain.Employee;
+import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Role;
 import com.ddfinv.core.repository.UserAccountRepository;
 
 public class EmployeeService {

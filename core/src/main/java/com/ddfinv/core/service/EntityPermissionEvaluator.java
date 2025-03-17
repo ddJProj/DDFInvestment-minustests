@@ -1,7 +1,7 @@
 package com.ddfinv.core.service;
 
-import com.ddfinv.core.entity.UserAccount;
-import com.ddfinv.core.entity.enums.Role;
+import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Role;
 
 public class EntityPermissionEvaluator implements PermissionEvaluator {
 

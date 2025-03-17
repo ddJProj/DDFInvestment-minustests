@@ -1,6 +1,6 @@
 package com.ddfinv.core.service;
 
-import com.ddfinv.core.entity.UserAccount;
+import com.ddfinv.core.domain.UserAccount;
 
 public interface PermissionEvaluator {
 
