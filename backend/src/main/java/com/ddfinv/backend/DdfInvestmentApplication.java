@@ -14,9 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import static org.springframework.boot.SpringApplication.run;
 
 @SpringBootApplication
-@EntityScan("com.ddinv.core.entity")
-@EnableJpaRepositories("com.ddinv.core.repository")
-@ComponentScan({"com.ddinv.core","com.ddinv.backend"})
+@EntityScan("com.ddfinv.core.domain")
+@EnableJpaRepositories("com.ddfinv.core.repository")
+@ComponentScan({"com.ddfinv.core","com.ddfinv.backend"})
 public class DdfInvestmentApplication {
 
     /*
