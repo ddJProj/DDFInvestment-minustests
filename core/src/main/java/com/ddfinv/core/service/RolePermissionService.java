@@ -40,6 +40,7 @@ import java.util.Set;
                 addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
                 break;
 
+                // todo: finish adding any needed permissions to each role
             case client:
                 addPermissionByName(permissions, completePermissions, "VIEW_CLIENT");
                 addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
