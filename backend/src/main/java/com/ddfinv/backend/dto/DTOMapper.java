@@ -39,7 +39,7 @@ public class DTOMapper {
         if (entity.getPermissions()!= null){
             // retrieve just the string name of each permission for use in the DTO. (dont need full entity)
             // create a new set of just the permission names
-            dto.setPermissionName(entity.getPermissions().stream().map(Permission::getName).collect(Collectors.toSet()));
+            dto.setPermissions(entity.getPermissions().stream().map(Permission::getPermissionType).collect(Collectors.toSet()));
         }
 
         return dto;
