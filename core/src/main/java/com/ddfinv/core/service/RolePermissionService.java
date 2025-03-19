@@ -2,6 +2,7 @@ package com.ddfinv.core.service;
 
 import com.ddfinv.core.domain.Permission;
 import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Permissions;
 import com.ddfinv.core.domain.enums.Role;
 import com.ddfinv.core.repository.PermissionRepository;
 
@@ -30,25 +31,33 @@ import java.util.Set;
             case admin:
                 return new HashSet<>(completePermissions);
 
+
             case employee:
-                addPermissionByName(permissions, completePermissions, "CREATE_CLIENT");
-                addPermissionByName(permissions, completePermissions, "EDIT_CLIENT");
-                addPermissionByName(permissions, completePermissions, "VIEW_CLIENT");
-                addPermissionByName(permissions, completePermissions, "VIEW_CLIENTS");
-                addPermissionByName(permissions, completePermissions, "ASSIGN_CLIENT");
-                addPermissionByName(permissions, completePermissions, "VIEW_INVESTMENT");
-                addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
+                addPermission(permissions, completePermissions, Permissions.VIEW_ACCOUNT);
+                addPermission(permissions, completePermissions, Permissions.EDIT_MY_DETAILS);
+                addPermission(permissions, completePermissions, Permissions.CREATE_USER);
+
+                addPermission(permissions, completePermissions, Permissions.CREATE_CLIENT);
+                addPermission(permissions, completePermissions, Permissions.EDIT_CLIENT);
+                addPermission(permissions, completePermissions, Permissions.VIEW_CLIENT);
+                addPermission(permissions, completePermissions, Permissions.VIEW_CLIENTS);
+                addPermission(permissions, completePermissions, Permissions.ASSIGN_CLIENT);
+                addPermission(permissions, completePermissions, Permissions.CREATE_INVESTMENT);
+                addPermission(permissions, completePermissions, Permissions.EDIT_INVESTMENT);
                 break;
 
-                // todo: finish adding any needed permissions to each role
             case client:
-                addPermissionByName(permissions, completePermissions, "VIEW_CLIENT");
-                addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
-                addPermissionByName(permissions, completePermissions, "CREATE_INVESTMENT");
+                addPermission(permissions, completePermissions, Permissions.VIEW_ACCOUNT);
+                addPermission(permissions, completePermissions, Permissions.EDIT_MY_DETAILS);
+                addPermission(permissions, completePermissions, Permissions.CREATE_USER);
+                addPermission(permissions, completePermissions, Permissions.VIEW_INVESTMENT);
                 break;
-            
+
             case guest:
-                addPermissionByName(permissions, completePermissions, "REQUEST_CLIENT_ACCOUNT");
+                addPermission(permissions, completePermissions, Permissions.VIEW_ACCOUNT);
+                addPermission(permissions, completePermissions, Permissions.EDIT_MY_DETAILS);
+                addPermission(permissions, completePermissions, Permissions.CREATE_USER);
+                addPermission(permissions, completePermissions, Permissions.REQUEST_CLIENT_ACCOUNT);
                 break;
 
             default:
@@ -65,10 +74,10 @@ import java.util.Set;
      * @param completePermissions - full list of permissions
      * @param nameOfPermission - name of the permission to add to target set for a role
      */
-    private void addPermissionByName(Set<Permission> targetPermissions, Set<Permission> completePermissions, String nameOfPermission){
+    private void addPermission(Set<Permission> targetPermissions, Set<Permission> completePermissions, Permissions permissionType){
         // create stream from complete list of permissions
         completePermissions.stream()
-        .filter(p -> p.getName().equals(nameOfPermission)) // search stream for permission matching nameOfPermission
+        .filter(p -> p.getPermissionType() == permissionType) // search stream for permission matching nameOfPermission
         .findFirst() // get first match if exists
         .ifPresent(targetPermissions::add); //add to target set if found
     }
