@@ -25,6 +25,8 @@ public enum Permissions {
      */
     EDIT_USER("Edits the details of a specific UserAccount."),
     DELETE_USER("Removes a UserAccount from the system."),
+    EDIT_EMPLOYEE("Edit the details of a specific Employee account instance."),
+    CREATE_EMPLOYEE("Creates a new Employee account instance."),
 
 
 
@@ -38,11 +40,15 @@ public enum Permissions {
     ASSIGN_CLIENT("Assigns an individual Client account instance to an Employeee partner."),
     CREATE_INVESTMENT("Creates a new investment for a specific Client account instance."),
     EDIT_INVESTMENT("Edits an existing investment for a specific Client account instance."),
+    VIEW_EMPLOYEES("Lists the details of all Employee account instances."),
+    VIEW_EMPLOYEE("Lists the details of a specific Employee account instance."),
+
+
 
     /**
      * Client level:
      */
-    VIEW_INVESTMENT("Views the details of a specific investment for this Client account instance"),
+    VIEW_INVESTMENT("Views the details of a specific investment for this Client account instance."),
 
 
 
