@@ -2,6 +2,7 @@ package com.ddfinv.backend.dto;
 
 import java.util.Set;
 
+import com.ddfinv.core.domain.enums.Permissions;
 import com.ddfinv.core.domain.enums.Role;
 
 import lombok.Data;
@@ -40,7 +41,7 @@ public class UserAccountDTO {
      */
     private Role role;
 
-    // simplified Set of permissionName strings
-    private Set<String> permissionName;
+    // Set of Permissions associated with this UserAccount
+    private Set<Permissions> permissions;
 
 }
