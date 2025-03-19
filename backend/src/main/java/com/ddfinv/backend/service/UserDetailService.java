@@ -32,7 +32,7 @@ public class UserDetailService implements UserDetailsService{
         .orElseThrow(() -> new UsernameNotFoundException("An UserAccount with that email address could not be found: " + email));
 
         var authorities = userAccount.getPermissions().stream()
-        .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+        .map(permission -> new SimpleGrantedAuthority(permission.getPermissionType().name()))
         .collect(Collectors.toList());
 
         authorities.add(new SimpleGrantedAuthority("Role_" + userAccount.getRole().name().toUpperCase()));
