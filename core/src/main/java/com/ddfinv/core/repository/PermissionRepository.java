@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.ddfinv.core.domain.Permission;
+import com.ddfinv.core.domain.enums.Permissions;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, Long>{
@@ -16,7 +17,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>{
      * @param name
      * @return Optional permission, returned if found
      */
-    Optional<Permission> findByName(String name);
+    Optional<Permission> findByPermissionType(Permissions permissionType);
 
     /**
      * Determines if a permission already exists 
@@ -24,6 +25,6 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>{
      * @param name
      * @return boolean true if match found, else false
      */
-    boolean existsByName(String name);
+    boolean existsByPermissionType(Permissions permissionType);
 
 }
