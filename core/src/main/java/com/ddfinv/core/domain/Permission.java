@@ -6,8 +6,11 @@ import java.util.Set;
 import org.hibernate.annotations.Collate;
 import org.hibernate.annotations.ManyToAny;
 
+import com.ddfinv.core.domain.enums.Permissions;
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,8 +21,9 @@ public class Permission {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     
+    @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private String name;
+    private Permissions permissionType;
 
     private String description;
 
@@ -28,8 +32,8 @@ public class Permission {
 
     public Permission(){}
 
-    public Permission(String name, String description){
-        this.name = name;
+    public Permission(Permissions permissionType, String description){
+        this.permissionType = permissionType;
         this.description = description;
     }
 
@@ -38,12 +42,12 @@ public class Permission {
         return this.id;
     }
 
-    public String getName(){
-        return this.name;
+    public Permissions getPermissionType(){
+        return this.permissionType;
     }
     
-    public void setName(String newName){
-        this.name = newName;
+    public void setPermissionType(Permissions permissionType){
+        this.permissionType = permissionType;
     }
 
     public Set<UserAccount> getUserAccounts(){
@@ -53,6 +57,15 @@ public class Permission {
     public void setUserAccounts(Set<UserAccount> userAccounts){
         this.userAccounts = userAccounts;
     }
+
+    public String getDescription(){
+        return this.description;
+    }
+    
+    public void setPermissionType(String description){
+        this.description = description;
+    }
+
 
 
     // TODO : 
