@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ddfinv.backend.dto.EmployeeDTO;
 import com.ddfinv.backend.service.EmployeeService;
 import com.ddfinv.backend.service.PermissionHandlerService;
+import com.ddfinv.core.domain.enums.Permissions;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -37,7 +38,7 @@ public class EmployeeController {
      */
     @PostMapping
     public ResponseEntity<?> createNewEmployeEntity(@RequestBody EmployeeDTO employeeDTO){
-        if (!permissionHandlerService.currentUserHasPermission("CREATE_EMPLOYEE")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.CREATE_EMPLOYEE)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         EmployeeDTO newEmployee = employeeService.createNewEmployee(employeeDTO);
@@ -50,7 +51,7 @@ public class EmployeeController {
      */
     @GetMapping
     public ResponseEntity<?> getAllEmployees(){
-        if(!permissionHandlerService.currentUserHasPermission("VIEW_EMPLOYEES")){
+        if(!permissionHandlerService.currentUserHasPermission(Permissions.VIEW_EMPLOYEES)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         List<EmployeeDTO> employeeList = employeeService.getAllEmployees();
@@ -64,7 +65,7 @@ public class EmployeeController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> getEmployeeById(@PathVariable Long id){
-        if (!permissionHandlerService.currentUserHasPermission("VIEW_EMPLOYEE")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.VIEW_EMPLOYEE)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -79,7 +80,7 @@ public class EmployeeController {
      */
     @GetMapping("/employee-id/{employeeId}")
     public ResponseEntity<?> getEmployeeByEmployeeId(@PathVariable String employeeId){
-        if (!permissionHandlerService.currentUserHasPermission("VIEW_EMPLOYEE")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.VIEW_EMPLOYEE)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -95,7 +96,7 @@ public class EmployeeController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateEmployeEntity(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO){
-        if (!permissionHandlerService.currentUserHasPermission("EDIT_EMPLOYEE")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.EDIT_EMPLOYEE)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
