@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Permissions;
 import com.ddfinv.core.repository.UserAccountRepository;
 import com.ddfinv.core.service.PermissionEvaluator;
 
@@ -21,29 +22,7 @@ public class PermissionHandlerService {
         this.userAccountRepository = userAccountRepository;
     }
 
-    /**
-     * 
-     * @param permissionName
-     * @return
-     */
-    public boolean thisUserHasPermission(String permissionName){
-        
-        return thisUserHasPermission(permissionName, null);
-    }
 
-    /**
-     * 
-     * @param permissionName
-     * @param resource
-     * @return
-     */
-    public boolean thisUserHasPermission(String permissionName, Object resource){
-        UserAccount thisUser = getThisUser();
-        if (thisUser == null){
-            return false;
-        }
-        return permissionEvaluator.hasPermission(thisUser, permissionName, resource);
-    }
 
     /**
      * 
@@ -61,31 +40,57 @@ public class PermissionHandlerService {
     /**
      * 
      * @param userAccountId
-     * @param permissionName
+     * @param permissionType
      * @return
      */
-    public boolean thisUserHasPermission(Long userAccountId, String permissionName){
-        return thisUserHasPermission(userAccountId, permissionName, null);
+    public boolean thisUserHasPermission(Long userAccountId, Permissions permissionType){
+        return thisUserHasPermission(userAccountId, permissionType, null);
     }
 
     /**
      * 
      * @param userAccountId
-     * @param permissionName
+     * @param permissionType
      * @param resource
      * @return
      */
-    public boolean thisUserHasPermission(Long userAccountId, String permissionName, Object resource){
+    public boolean thisUserHasPermission(Long userAccountId, Permissions permissionType, Object resource){
         UserAccount userAccount = userAccountRepository.findById(userAccountId).orElse(null);
         if (userAccount == null){
             return false;
         }
-        return permissionEvaluator.hasPermission(userAccount, permissionName, resource);
+        return permissionEvaluator.hasPermission(userAccount, permissionType, resource);
     }
 
-    public boolean currentUserHasPermission(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'currentUserHasPermission'");
+    /**
+     * 
+     * @param permissionType
+     * @return
+     */
+    public boolean thisUserHasPermission(Permissions permissionType){
+        
+        return thisUserHasPermission(permissionType, null);
+    }
+
+    /**
+     * 
+     * @param permissionType
+     * @param resource
+     * @return
+     */
+    public boolean thisUserHasPermission(Permissions permissionType, Object resource){
+        UserAccount thisUser = getThisUser();
+        if (thisUser == null){
+            return false;
+        }
+        return permissionEvaluator.hasPermission(thisUser, permissionType, resource);
+    }
+
+
+
+    public boolean currentUserHasPermission(Permissions permissionType) {
+        return thisUserHasPermission(permissionType);
+        
     }
 
 }
