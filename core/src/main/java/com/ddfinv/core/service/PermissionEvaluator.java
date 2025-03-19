@@ -1,6 +1,7 @@
 package com.ddfinv.core.service;
 
 import com.ddfinv.core.domain.UserAccount;
+import com.ddfinv.core.domain.enums.Permissions;
 
 public interface PermissionEvaluator {
 
@@ -12,5 +13,5 @@ public interface PermissionEvaluator {
      * @param resourceObject
      * @return boolean true if permission is held, else false
      */
-    boolean hasPermission(UserAccount userAccount, String permissionName, Object resourceObject);
+    boolean hasPermission(UserAccount userAccount, Permissions permissionType, Object resourceObject);
 }
