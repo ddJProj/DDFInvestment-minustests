@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ddfinv.backend.dto.DTOMapper;
@@ -31,13 +32,15 @@ public class UserAccountService {
     private final RolePermissionService rolePermissionService;
     private final AuthenticationService authService;
     private final DTOMapper dtoMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserAccountService (UserAccountRepository userAccountRepository, PermissionRepository permissionRepository, AuthenticationService authService, DTOMapper dtoMapper){
+    public UserAccountService (UserAccountRepository userAccountRepository, PermissionRepository permissionRepository, AuthenticationService authService, DTOMapper dtoMapper, PasswordEncoder passwordEncoder){
         this.userAccountRepository = userAccountRepository;
         this.permissionRepository = permissionRepository;
         this.authService = authService;
         this.dtoMapper = dtoMapper;
+        this.passwordEncoder = passwordEncoder;
         this.rolePermissionService = new RolePermissionService();
     }
 
@@ -45,7 +48,7 @@ public class UserAccountService {
     public UserAccountDTO createUserAcount(UserAccountDTO dto){
         UserAccount user = dtoMapper.toEntity(dto);
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()){
-            user.setHashedPassword(authService.hashPassword(dto.getPassword()));
+            user.setHashedPassword(passwordEncoder.encode(dto.getPassword())); 
         }
         UserAccount storedAccount = userAccountRepository.save(user);
 
@@ -56,6 +59,7 @@ public class UserAccountService {
 
         return dtoMapper.toDTO(storedAccount);
     }
+
 
 
 
@@ -116,8 +120,9 @@ public class UserAccountService {
      * 
      * @param email
      * @return
+     * @throws ResourceNotFoundException 
      */
-    public UserAccountDTO findById(Long id){
+    public UserAccountDTO findById(Long id) throws ResourceNotFoundException{
         return userAccountRepository.findById(id).map(dtoMapper::toDTO).orElseThrow(
             () -> new ResourceNotFoundException("A UserAccount with this ID was not found: " + id));
         
@@ -149,9 +154,10 @@ public class UserAccountService {
      * @param id
      * @param dto
      * @return UserAccountDTO - newly mapped UserAccount entity to DTO
+     * @throws ResourceNotFoundException 
      */
     @Transactional
-    public UserAccountDTO updateUserAccount(Long id, UserAccountDTO dto){
+    public UserAccountDTO updateUserAccount(Long id, UserAccountDTO dto) throws ResourceNotFoundException{
         UserAccount storedUserAccount = userAccountRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("UserAccount with this ID value was not found: " + id));
 
@@ -159,7 +165,7 @@ public class UserAccountService {
         if (dto.getFirstName() != null) storedUserAccount.setFirstName(dto.getFirstName());
         if (dto.getLastName() != null) storedUserAccount.setLastName(dto.getLastName());
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            storedUserAccount.setHashedPassword(authService.hashPassword(dto.getPassword()));
+            storedUserAccount.setHashedPassword(passwordEncoder.encode(dto.getPassword()));
         }
         if (dto.getRole() != null && storedUserAccount.getRole() != dto.getRole()){
             assignUserRole(storedUserAccount, dto.getRole());
