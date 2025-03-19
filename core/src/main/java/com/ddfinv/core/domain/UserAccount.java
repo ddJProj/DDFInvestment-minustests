@@ -116,7 +116,7 @@ public class UserAccount {
      * 
      * @param client - Client entity instance to set for the UserAccount
      */
-    public void setClientRolee(Client client){
+    public void setClientRole(Client client){
         this.clientRole = client;
     }
 

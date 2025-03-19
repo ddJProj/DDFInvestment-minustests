@@ -68,7 +68,7 @@ public class JwtService {
      * @param userDetails
      * @return
      */
-    public String generateTokken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails){
         return generateToken(new HashMap<>(), userDetails);
     }
 
