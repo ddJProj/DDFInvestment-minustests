@@ -18,6 +18,7 @@ import com.ddfinv.backend.dto.ClientDTO;
 import com.ddfinv.backend.service.ClientService;
 import com.ddfinv.backend.service.PermissionHandlerService;
 import com.ddfinv.core.domain.Client;
+import com.ddfinv.core.domain.enums.Permissions;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -39,7 +40,7 @@ public class ClientController {
      */
     @PostMapping
     public ResponseEntity<?> createNewEmployeEntity(@RequestBody ClientDTO clientDTO){
-        if (!permissionHandlerService.currentUserHasPermission("CREATE_CLIENT")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.CREATE_CLIENT)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         ClientDTO newClient = clientService.createClient(clientDTO);
@@ -52,7 +53,7 @@ public class ClientController {
      */
     @GetMapping
     public ResponseEntity<?> getAllClients(){
-        if(!permissionHandlerService.currentUserHasPermission("VIEW_CLIENTS")){
+        if(!permissionHandlerService.currentUserHasPermission(Permissions.VIEW_CLIENTS)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         List<ClientDTO> clientList = clientService.getAllClients();
@@ -66,7 +67,7 @@ public class ClientController {
      */
     @PostMapping("/assign")
     public ResponseEntity<?> assignClientToEmployee(@RequestBody AssignClientDTO assignClientDTO){
-        if (!permissionHandlerService.currentUserHasPermission("ASSIGN_CLIENT")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.ASSIGN_CLIENT)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         ClientDTO assignClient = clientService.assignClientToEmployee(assignClientDTO);
@@ -81,7 +82,7 @@ public class ClientController {
      */
     @GetMapping("/by-employee/{employeeId}")
     public ResponseEntity<?> getClientsByEmployeeId(@PathVariable String employeeId){
-        if(!permissionHandlerService.currentUserHasPermission("VIEW_CLIENTS")){
+        if(!permissionHandlerService.currentUserHasPermission(Permissions.VIEW_CLIENTS)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         List<ClientDTO> clientList= clientService.getClientsByEmployeeId(employeeId);
@@ -95,7 +96,7 @@ public class ClientController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientById(@PathVariable Long id){
-        if (!permissionHandlerService.currentUserHasPermission("VIEW_CLIENT")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.VIEW_CLIENT)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -110,7 +111,7 @@ public class ClientController {
      */
     @GetMapping("/client-id/{clientId}")
     public ResponseEntity<?> getClientByClientId(@PathVariable String clientId){
-        if (!permissionHandlerService.currentUserHasPermission("VIEW_CLIENT")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.VIEW_CLIENT)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -126,7 +127,7 @@ public class ClientController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateClientEntity(@PathVariable Long id, @RequestBody ClientDTO clientDTO){
-        if (!permissionHandlerService.currentUserHasPermission("EDIT_CLIENT")){
+        if (!permissionHandlerService.currentUserHasPermission(Permissions.EDIT_CLIENT)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
