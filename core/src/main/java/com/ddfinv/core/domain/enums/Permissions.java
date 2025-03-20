@@ -57,7 +57,7 @@ public enum Permissions {
     /**
      * Guest level:
      */
-    REQUEST_CLIENT_ACCOUNT("Request upgrade to Client account status with the firm.");
+    REQUEST_CLIENT_ACCOUNT("Request upgrade to Client account status with the firm."), VIEW_ACCOUNTS;
 
 
     public String getDescription() {
