@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ddfinv.backend.service.auth.AuthenticationService;
 import com.ddfinv.core.domain.Client;
 import com.ddfinv.core.domain.Employee;
+import com.ddfinv.core.domain.GuestUpgradeRequest;
 import com.ddfinv.core.domain.Permission;
 import com.ddfinv.core.domain.UserAccount;
 
@@ -115,4 +116,44 @@ public class DTOMapper {
         }
         return dto;
     }
+
+    /**
+     * 
+     * @param entity
+     * @return
+     */
+    public UpgradeRequestDTO toUpgradeRequestDTO(GuestUpgradeRequest entity){
+        if (entity == null){
+            return null;
+        }
+        UpgradeRequestDTO dto = new UpgradeRequestDTO();
+        dto.setId(entity.getId());
+        dto.setUserAccountId(entity.getUserAccount().getId());
+
+        UserAccount userAccount = entity.getUserAccount();
+        if (userAccount != null){
+            dto.setUserEmail(userAccount.getEmail());
+            dto.setUserFirstName(userAccount.getFirstName());
+            dto.setUserLastName(userAccount.getLastName());
+
+        }
+        dto.setRequestDate(entity.getRequestDate());
+        dto.setStatus(entity.getStatus());
+        dto.setDetails(entity.getDetails());
+
+        return dto;
+
+    }
+    public GuestUpgradeRequest toUpgradeRequestEntity(UpgradeRequestDTO dto, UserAccount userAccount){
+        if (dto == null){
+            return null;
+        }
+        GuestUpgradeRequest entity = new GuestUpgradeRequest();
+        entity.setUserAccount(userAccount);
+        entity.setDetails(dto.getDetails());
+
+        return entity;
+    }
+
+    
 }
