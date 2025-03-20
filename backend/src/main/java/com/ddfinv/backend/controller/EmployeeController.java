@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ddfinv.backend.dto.EmployeeDTO;
-import com.ddfinv.backend.service.EmployeeService;
 import com.ddfinv.backend.service.PermissionHandlerService;
+import com.ddfinv.backend.service.accounts.EmployeeService;
 import com.ddfinv.core.domain.enums.Permissions;
 
 @RestController

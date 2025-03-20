@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ddfinv.backend.dto.AssignClientDTO;
 import com.ddfinv.backend.dto.ClientDTO;
-import com.ddfinv.backend.service.ClientService;
 import com.ddfinv.backend.service.PermissionHandlerService;
+import com.ddfinv.backend.service.accounts.ClientService;
 import com.ddfinv.core.domain.Client;
 import com.ddfinv.core.domain.enums.Permissions;
 
