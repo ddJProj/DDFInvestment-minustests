@@ -6,15 +6,11 @@ import lombok.Data;
 
 // TODO: do I need to add more? check guest requirements 
 
+@Data
 public class GuestDTO {
-    
-    @Data
-    public class EmployeeDTO {
-        private Long id;
-        private String guestId;
-        private Long userAccountId;
-        private String firstName;
-        private String lastName;
-        private String email;
-    }
+    private Long id;
+    private Long userAccountId;
+    private String firstName;
+    private String lastName;
+    private String email;
 }
