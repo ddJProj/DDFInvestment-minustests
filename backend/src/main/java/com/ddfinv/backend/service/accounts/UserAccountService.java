@@ -21,7 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ddfinv.backend.dto.DTOMapper;
-import com.ddfinv.backend.dto.UserAccountDTO;
+import com.ddfinv.backend.dto.accounts.UserAccountDTO;
+import com.ddfinv.backend.dto.actions.UpdatePasswordDTO;
 import com.ddfinv.backend.exception.ResourceNotFoundException;
 import com.ddfinv.backend.exception.security.InvalidPasswordException;
 import com.ddfinv.backend.service.auth.AuthenticationService;
@@ -192,23 +193,33 @@ public class UserAccountService {
 
 
     @Transactional
-    public boolean updateUserAccountPassword(Long userId, String currentPassword, String newPassword) throws ResourceNotFoundException, InvalidPasswordException{
+    public void updateUserAccountPassword(Long userId, UpdatePasswordDTO updatePasswordDTO) throws ResourceNotFoundException, InvalidPasswordException{
         UserAccount userAccount = userAccountRepository.findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("A User account with that ID was not found: " + userId));
 
-        if (!passwordEncoder.matches(currentPassword, userAccount.getHashedPassword())){
+        if (!passwordEncoder.matches(updatePasswordDTO.getCurrentPassword(), userAccount.getHashedPassword())){
             throw new InvalidPasswordException("The password entered did not match the stored value.");
         }
-
-        userAccount.setHashedPassword(passwordEncoder.encode(newPassword));
+        if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getPasswordConfirmation())){
+            throw new InvalidPasswordException("The new password and confirmation password did not match.");
+        }
+        userAccount.setHashedPassword(passwordEncoder.encode(updatePasswordDTO.getNewPassword()));
         userAccountRepository.save(userAccount);
 
-        return true;
     }
+
+
+
+//TODO: FINISH IMPLEMENTING NEW FEATURES BELOW:
 
     public void deleteUserAccount(Long id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteUserAccount'");
+    }
+
+    public UserAccountDTO changeUserRole(Long id, Role updatedRole) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'changeUserRole'");
     }
 }
 
