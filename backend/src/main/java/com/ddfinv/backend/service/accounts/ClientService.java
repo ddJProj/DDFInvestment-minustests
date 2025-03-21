@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import com.ddfinv.backend.dto.AssignClientDTO;
-import com.ddfinv.backend.dto.ClientDTO;
 import com.ddfinv.backend.dto.DTOMapper;
+import com.ddfinv.backend.dto.accounts.ClientDTO;
+import com.ddfinv.backend.dto.actions.AssignClientDTO;
 import com.ddfinv.backend.repository.ClientRepository;
 import com.ddfinv.backend.repository.EmployeeRepository;
 import com.ddfinv.core.domain.Client;

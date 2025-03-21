@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.ddfinv.backend.dto.ClientDTO;
 import com.ddfinv.backend.dto.DTOMapper;
-import com.ddfinv.backend.dto.UpgradeRequestDTO;
+import com.ddfinv.backend.dto.accounts.ClientDTO;
+import com.ddfinv.backend.dto.actions.UpgradeRequestDTO;
 import com.ddfinv.backend.exception.ApplicationException;
 import com.ddfinv.backend.exception.validation.InputException;
 

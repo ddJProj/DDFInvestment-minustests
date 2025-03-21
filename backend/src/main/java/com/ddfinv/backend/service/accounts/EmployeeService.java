@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ddfinv.backend.dto.DTOMapper;
-import com.ddfinv.backend.dto.EmployeeDTO;
+import com.ddfinv.backend.dto.accounts.EmployeeDTO;
 import com.ddfinv.backend.repository.EmployeeRepository;
 import com.ddfinv.core.domain.Employee;
 import com.ddfinv.core.domain.UserAccount;

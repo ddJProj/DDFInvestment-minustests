@@ -4,6 +4,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.ddfinv.backend.dto.accounts.ClientDTO;
+import com.ddfinv.backend.dto.accounts.EmployeeDTO;
+import com.ddfinv.backend.dto.accounts.UserAccountDTO;
+import com.ddfinv.backend.dto.actions.UpgradeRequestDTO;
 import com.ddfinv.backend.service.auth.AuthenticationService;
 import com.ddfinv.core.domain.Client;
 import com.ddfinv.core.domain.Employee;
@@ -155,5 +159,5 @@ public class DTOMapper {
         return entity;
     }
 
-    
+
 }

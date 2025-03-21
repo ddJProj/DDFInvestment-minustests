@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ddfinv.backend.dto.UserAccountDTO;
+import com.ddfinv.backend.dto.accounts.UserAccountDTO;
 import com.ddfinv.backend.dto.auth.AuthenticationRequest;
 import com.ddfinv.backend.dto.auth.AuthenticationResponse;
 import com.ddfinv.backend.dto.auth.RegisterAuthRequest;

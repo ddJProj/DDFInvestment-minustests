@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ddfinv.backend.dto.DTOMapper;
-import com.ddfinv.backend.dto.GuestDTO;
-import com.ddfinv.backend.dto.UpgradeRequestDTO;
-import com.ddfinv.backend.dto.UserAccountDTO;
+import com.ddfinv.backend.dto.accounts.GuestDTO;
+import com.ddfinv.backend.dto.accounts.UserAccountDTO;
+import com.ddfinv.backend.dto.actions.UpgradeRequestDTO;
 import com.ddfinv.core.domain.GuestUpgradeRequest;
 import com.ddfinv.core.domain.UserAccount;
 import com.ddfinv.core.domain.enums.Role;
