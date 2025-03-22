@@ -10,6 +10,8 @@ import com.ddfinv.core.service.RolePermissionService;
 
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collector;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.security.config.oauth2.client.ClientRegistrationsBeanDefinitionParser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +27,10 @@ import com.ddfinv.backend.dto.DTOMapper;
 import com.ddfinv.backend.dto.accounts.UserAccountDTO;
 import com.ddfinv.backend.dto.actions.UpdatePasswordDTO;
 import com.ddfinv.backend.exception.ResourceNotFoundException;
+import com.ddfinv.backend.exception.database.IllegalOperationException;
 import com.ddfinv.backend.exception.security.InvalidPasswordException;
+import com.ddfinv.backend.repository.ClientRepository;
+import com.ddfinv.backend.repository.EmployeeRepository;
 import com.ddfinv.backend.service.auth.AuthenticationService;
 
 @Service
@@ -36,10 +42,14 @@ public class UserAccountService {
     private final AuthenticationService authService;
     private final DTOMapper dtoMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EmployeeRepository employeeRepository;
+    private final ClientRepository clientRepository; 
 
     @Autowired
-    public UserAccountService (UserAccountRepository userAccountRepository, PermissionRepository permissionRepository, AuthenticationService authService, DTOMapper dtoMapper, PasswordEncoder passwordEncoder){
+    public UserAccountService (UserAccountRepository userAccountRepository, PermissionRepository permissionRepository, AuthenticationService authService, DTOMapper dtoMapper, PasswordEncoder passwordEncoder, EmployeeRepository employeeRepository, ClientRepository clientRepository){
         this.userAccountRepository = userAccountRepository;
+        this.employeeRepository = employeeRepository;
+        this.clientRepository = clientRepository;
         this.permissionRepository = permissionRepository;
         this.authService = authService;
         this.dtoMapper = dtoMapper;
@@ -208,19 +218,75 @@ public class UserAccountService {
 
     }
 
+    @Transactional
+    public void resetUserAccountPassword(Long userId, String newPassword) throws ResourceNotFoundException, InvalidPasswordException{
+        UserAccount userAccount = userAccountRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("A User account with that ID was not found: " + userId));
+
+        
+        try{
+            authService.validatePassword(newPassword);
+        }catch(InvalidPasswordException e){
+            throw e;
+        }
+
+        userAccount.setHashedPassword(passwordEncoder.encode(newPassword));
+        userAccountRepository.save(userAccount);
+
+        // ADD Some form of logging? store with db entry
+        // LocalDateTime dateTime = LocalDateTime.now();
+        // log.info("The password for {} was reset on : {}, by the UserAccount: {}", userId, dateTime, userAccount.getId());
+    }
+
+
+
 
 
 //TODO: FINISH IMPLEMENTING NEW FEATURES BELOW:
+    @Transactional
+    public void deleteUserAccount(Long id) throws ResourceNotFoundException, IllegalOperationException {
+        UserAccount userAccount = userAccountRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("User with the provided id value could not be found: " + id));
 
-    public void deleteUserAccount(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteUserAccount'");
+        if (userAccount.getRole() == Role.admin && userAccountRepository.numOfRoles(Role.admin) <= 1){
+            throw new IllegalOperationException("You cannot remove the only admin UserAccount from the system.");
+        }
+
+        // reset the account's permissions
+        userAccount.setPermissions(new HashSet<>());
+
+        if (userAccount.getEmployee() != null){
+            employeeRepository.delete(userAccount.getEmployee());
+        }
+
+        if (userAccount.getClient() != null){
+            clientRepository.delete(userAccount.getClient());
+        }
+
+        userAccountRepository.delete(userAccount);
+
+        // ADD Some form of logging?
+        // log.info("The UserAccount: {}, email: {}, Role: {} was successfully deleted from the system.", userId, userAccount.getEmail(), userAccount.getRole());
+
     }
 
-    public UserAccountDTO changeUserRole(Long id, Role updatedRole) {
+    @Transactional
+    public UserAccountDTO changeUserRole(Long id, Role updatedRole) throws ResourceNotFoundException, IllegalOperationException {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changeUserRole'");
+        UserAccount userAccount = userAccountRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("User with the provided id value could not be found: " + id));
+
+        if (userAccount.getRole() == Role.admin && updatedRole != Role.admin && userAccountRepository.countByRole(Role.admin) <= 1){
+
+            throw new IllegalOperationException("You cannot remove the only admin UserAccount from the system.");
+        }
+        assignUserRole(userAccount, updatedRole);
+    
+        UserAccount updatedUserAccount = userAccountRepository.save(userAccount);
+        
+        return dtoMapper.toDTO(updatedUserAccount);
     }
+
 }
 
 //TODO : finish documentation
