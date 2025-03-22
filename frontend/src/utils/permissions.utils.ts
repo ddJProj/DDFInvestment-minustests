@@ -1,47 +1,66 @@
 // src/utils/permissions.utils.ts
 import { UserRole, Permissions } from "../types/auth.types";
 
-// Updated to reflect the Rust role definitions:
-//   Admin, Employee, Client, Restricted
+// updated to reflect backend role definitions (Spring):
+//   Admin, Employee, Client, Guest
 export const ROLE_PERMISSIONS: Record<UserRole, { permissions: Permissions[] }> = {
   [UserRole.Admin]: {
     permissions: [
-      Permissions.ManageUsers,
-      Permissions.ManageRoles,
-      Permissions.ManageSystem,
-      Permissions.ViewAllData,
-      Permissions.ManageClients,
-      Permissions.ViewClientData,
-      Permissions.ModifyClientService,
-      Permissions.AssignClients,
-      Permissions.ViewOwnData,
-      Permissions.UpdateProfile,
-      Permissions.RequestService,
+      Permissions.VIEW_ACCOUNT,
+      Permissions.VIEW_ACCOUNTS,
+      Permissions.EDIT_MY_DETAILS,
+      Permissions.UPDATE_MY_PASSWORD,
+      Permissions.CREATE_USER,
+      Permissions.EDIT_USER,
+      Permissions.DELETE_USER,
+      Permissions.EDIT_EMPLOYEE,
+      Permissions.CREATE_EMPLOYEE,
+      Permissions.UPDATE_OTHER_PASSWORD,
+      Permissions.CREATE_CLIENT,
+      Permissions.EDIT_CLIENT,
+      Permissions.VIEW_CLIENT,
+      Permissions.VIEW_CLIENTS,
+      Permissions.ASSIGN_CLIENT,
+      Permissions.CREATE_INVESTMENT,
+      Permissions.EDIT_INVESTMENT,
+      Permissions.VIEW_EMPLOYEES,
+      Permissions.VIEW_EMPLOYEE,
+      Permissions.VIEW_INVESTMENT,
+      Permissions.REQUEST_CLIENT_ACCOUNT
     ],
   },
   [UserRole.Employee]: {
     permissions: [
-      Permissions.ViewOwnData,
-      Permissions.UpdateProfile,
-      Permissions.ViewClientData,
-      Permissions.ModifyClientService,
-      Permissions.AssignClients,
-      // Depending on your logic, employees may or may not manage clients:
-      // Permissions.ManageClients,
+      Permissions.VIEW_ACCOUNT,
+      Permissions.EDIT_MY_DETAILS,
+      Permissions.UPDATE_MY_PASSWORD,
+      Permissions.CREATE_USER,
+      Permissions.CREATE_CLIENT,
+      Permissions.EDIT_CLIENT,
+      Permissions.VIEW_CLIENT,
+      Permissions.VIEW_CLIENTS,
+      Permissions.ASSIGN_CLIENT,
+      Permissions.CREATE_INVESTMENT,
+      Permissions.EDIT_INVESTMENT,
+      Permissions.VIEW_INVESTMENT
     ],
   },
   [UserRole.Client]: {
     permissions: [
-      Permissions.ViewOwnData,
-      Permissions.UpdateProfile,
-      Permissions.RequestService,
+      Permissions.VIEW_ACCOUNT,
+      Permissions.EDIT_MY_DETAILS,
+      Permissions.UPDATE_MY_PASSWORD,
+      Permissions.CREATE_USER,
+      Permissions.VIEW_INVESTMENT
     ],
   },
-  [UserRole.Restricted]: {
+  [UserRole.Guest]: {
     permissions: [
-      Permissions.ViewOwnData,
-      // Consider whether Restricted should be able to update profile or request service.
-      // If not, leave as is; if yes, add Permissions.UpdateProfile or Permissions.RequestService.
+      Permissions.VIEW_ACCOUNT,
+      Permissions.EDIT_MY_DETAILS,
+      Permissions.UPDATE_MY_PASSWORD,
+      Permissions.CREATE_USER,
+      Permissions.REQUEST_CLIENT_ACCOUNT
     ],
   },
 };

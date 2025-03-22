@@ -1,57 +1,132 @@
-// app.tsx
 //import reactLogo from './assets/react.svg'
 //import viteLogo from '/vite.svg'
+// src/App.tsx
+import React, { createContext, useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Login from './components/pages/login/Login';
+import Registration from './components/pages/login/Registration';
+import AdminDashboard from './components/pages/dashboard/AdminDashboard';
+import EmployeeDashboard from './components/pages/dashboard/EmployeeDashboard';
+import ClientDashboard from './components/pages/dashboard/ClientDashboard';
+import Dashboard from './components/pages/dashboard/Dashboard';
+import UnauthorizedPage from './components/pages/errors/UnauthorizedPage';
+import { authUtils } from './utils/auth.utils';
+import { UserRole } from './types/auth.types';
 
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { ROUTER_CONFIG } from "./constants/router.constants";
-import { fetchSession, getSession } from "./utils/session.utils";
+// Create auth context for global state management
+export const AuthContext = createContext<{
+  isAuthenticated: boolean;
+  userRole: string | null;
+  logout: () => void;
+}>({
+  isAuthenticated: false,
+  userRole: null,
+  logout: () => {},
+});
 
 const App: React.FC = () => {
-  const [session, setSession] = useState<{ role: string; permissions: string[] } | null>(null);
-  const { token } = getSession();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(authUtils.isAuthenticated());
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (token) {
-      fetchSession(token)
-        .then((data) => setSession(data))
-        .catch(() => {
-          setSession(null);
-          localStorage.clear(); // Log out the user if session fetch fails
-        });
-    }
-  }, [token]);
+    // Check authentication status on mount
+    const checkAuth = () => {
+      const isAuth = authUtils.isAuthenticated();
+      setIsAuthenticated(isAuth);
+      
+      if (isAuth) {
+        const user = authUtils.getUser();
+        setUserRole(user?.role || null);
+      }
+      
+      setIsLoading(false);
+    };
+    
+    checkAuth();
+  }, []);
 
-const renderRoute = ({ element: Component, isProtected, roles }: any) => {
-  if (isProtected) {
-    if (!token || !session) {
+  const logout = () => {
+    authUtils.clearAuthData();
+    setIsAuthenticated(false);
+    setUserRole(null);
+  };
+
+  // Protected route component
+  const ProtectedRoute = ({ 
+    children, 
+    allowedRoles = [] 
+  }: { 
+    children: React.ReactNode; 
+    allowedRoles?: string[];
+  }) => {
+    if (!isAuthenticated) {
       return <Navigate to="/login" />;
     }
 
-    // Check role-based permissions for protected routes
-    if (roles && !roles.some((role: string) => session.role === role)) {
+    if (allowedRoles.length > 0 && userRole && !allowedRoles.includes(userRole)) {
       return <Navigate to="/unauthorized" />;
     }
+
+    return <>{children}</>;
+  };
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
-  return <Component />;
-};
-
   return (
-    <Router>
-      <Routes>
-        {ROUTER_CONFIG.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={renderRoute(route)} // Call renderRoute to render the route element
+    <AuthContext.Provider value={{ isAuthenticated, userRole, logout }}>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
+          <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Registration />} />
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+          
+          {/* Protected Routes */}
+          <Route 
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
           />
-        ))}
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+          
+          <Route 
+            path="/dashboard/admin"
+            element={
+              <ProtectedRoute allowedRoles={[UserRole.Admin]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/dashboard/employee"
+            element={
+              <ProtectedRoute allowedRoles={[UserRole.Employee]}>
+                <EmployeeDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/dashboard/client"
+            element={
+              <ProtectedRoute allowedRoles={[UserRole.Client]}>
+                <ClientDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Redirect to login for any other routes */}
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
+        </Routes>
+      </Router>
+    </AuthContext.Provider>
   );
 };
 
 export default App;
-
