@@ -126,7 +126,7 @@ public class UserAccount {
      * @return Long id - the id value of an account
      */
     public Long getId(){
-       return this.id;
+        return this.id;
     }
     /**
      * Setter for the id attribute of an useraccount instance
@@ -140,7 +140,7 @@ public class UserAccount {
      * @return String email - the email value of an account
      */
     public String getEmail(){
-       return this.email;
+        return this.email;
     }
     /**
      * Setter for the email attribute of an useraccount instance
@@ -153,7 +153,7 @@ public class UserAccount {
      * @return String firstName - the firstName value of an account
      */
     public String getFirstName(){
-       return this.firstName;
+        return this.firstName;
     }
 
     /**
@@ -168,7 +168,7 @@ public class UserAccount {
      * @return String lastName - the lastName value of an account
      */
     public String getLastName(){
-       return this.lastName;
+        return this.lastName;
     }
 
     /**
@@ -183,7 +183,7 @@ public class UserAccount {
      * @return Role role - the role value of an account
      */
     public Role getRole(){
-       return this.role;
+        return this.role;
     }
 
     /**
@@ -198,7 +198,7 @@ public class UserAccount {
      * @return Role role - the role value of an account
      */
     public Set<Permission> getPermissions(){
-       return this.permissions;
+        return this.permissions;
     }
 
     /**
@@ -216,10 +216,10 @@ public class UserAccount {
     public String getHashedPassword() {
         return this.hashedPassword;
     }
-  
+
     /**
      * Setter for the stored hashed password attribute of an useraccount instance
-     */  
+     */
     public void setHashedPassword(String password) {
         this.hashedPassword = password;
     }
