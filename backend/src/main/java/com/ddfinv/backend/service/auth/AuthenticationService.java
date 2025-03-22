@@ -64,7 +64,7 @@ public class AuthenticationService {
      * @param passwordString
      * @return
      */
-    private String validateString(String passwordString) throws InvalidPasswordException {
+    public String validatePassword(String passwordString) throws InvalidPasswordException {
         if(passwordString == null){
             throw new InvalidPasswordException
                 ("Password entry must not be blank!");
@@ -96,7 +96,7 @@ public class AuthenticationService {
             throw new EmailValidationException("The email provided is linked to an existing account.");
         }
         
-        validateString(request.getPassword());
+        validatePassword(request.getPassword());
         UserAccountDTO userAccountDTO = new UserAccountDTO();
 
         userAccountDTO.setFirstName(request.getFirstName());
