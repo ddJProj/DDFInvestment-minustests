@@ -42,4 +42,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
      * @return boolean true if match found, else false
      */
     boolean existsByRole(Role targetRole);
+
+    int numOfRoles(Role role);
+
+    int countByRole(Role role);
 }
