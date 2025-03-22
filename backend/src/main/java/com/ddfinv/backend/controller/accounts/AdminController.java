@@ -37,30 +37,6 @@ public class AdminController {
         this.permissionHandlerService = permissionHandlerService;
     }
 
-    /**
-     * 
-     * @param role
-     * @return
-     */
-    @GetMapping("/users/by-role/{role}")
-    public ResponseEntity<?> getUsersByRolee(@PathVariable Role role) {
-        if (permissionHandlerService.getThisUser().getRole() != Role.admin){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        List<UserAccountDTO> userAccounts = userAccountService.getAllUserAccounts(role);
-        return ResponseEntity.ok(userAccounts);
-    }
-    
-    @PutMapping("/users/{id}/{role}")
-    public ResponseEntity<?> changeUserRole(@PathVariable Long id, @RequestParam Role updatedRole) {
-        if (permissionHandlerService.getThisUser().getRole() != Role.admin){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        UserAccountDTO updatedUserAccount  = userAccountService.changeUserRole(id, updatedRole);
-        return ResponseEntity.ok(updatedUserAccount);
-    }
 
 /*
  * TODO: 
