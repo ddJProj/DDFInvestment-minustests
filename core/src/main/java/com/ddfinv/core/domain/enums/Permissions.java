@@ -17,7 +17,9 @@ public enum Permissions {
      * UserAccount level:
      */
     VIEW_ACCOUNT("View the details of you UserAccount."),
+    VIEW_ACCOUNTS("View all UserAccounts and details."),
     EDIT_MY_DETAILS("Edits the account details of this specific UserAccount instance."),
+    UPDATE_MY_PASSWORD("Updates the stored password for this UserAccount's own password."),
     CREATE_USER("Creates a new UserAccount."),
 
     /**
@@ -27,6 +29,7 @@ public enum Permissions {
     DELETE_USER("Removes a UserAccount from the system."),
     EDIT_EMPLOYEE("Edit the details of a specific Employee account instance."),
     CREATE_EMPLOYEE("Creates a new Employee account instance."),
+    UPDATE_OTHER_PASSWORD("Updates the stored password for the target UserAccount."),
 
 
 
@@ -51,13 +54,10 @@ public enum Permissions {
     VIEW_INVESTMENT("Views the details of a specific investment for this Client account instance."),
 
 
-
-
-
     /**
      * Guest level:
      */
-    REQUEST_CLIENT_ACCOUNT("Request upgrade to Client account status with the firm."), VIEW_ACCOUNTS;
+    REQUEST_CLIENT_ACCOUNT("Request upgrade to Client account status with the firm.");
 
 
     public String getDescription() {
