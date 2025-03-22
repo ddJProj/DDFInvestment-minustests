@@ -21,7 +21,7 @@ import com.ddfinv.core.domain.Client;
 import com.ddfinv.core.domain.enums.Permissions;
 
 @RestController
-@RequestMapping("/api/employees")
+@RequestMapping("/api/client")
 public class ClientController {
     
     private final ClientService clientService;
