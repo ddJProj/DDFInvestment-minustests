@@ -5,12 +5,14 @@ import java.net.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.ddfinv.core.domain.UserAccount;
 import com.ddfinv.core.domain.enums.Permissions;
 import com.ddfinv.core.repository.UserAccountRepository;
 import com.ddfinv.core.service.PermissionEvaluator;
 
+@Service
 public class PermissionHandlerService {
 
     private final PermissionEvaluator permissionEvaluator;

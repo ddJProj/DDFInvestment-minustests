@@ -21,6 +21,7 @@ import com.ddfinv.core.repository.UserAccountRepository;
 
 // import jakarta.transaction.Transactional;
 
+@Service
 public class ClientService {
     private final ClientRepository clientRepository;
     private final EmployeeRepository employeeRepository;

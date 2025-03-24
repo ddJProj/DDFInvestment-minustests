@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ddfinv.backend.dto.DTOMapper;
@@ -21,6 +22,7 @@ import com.ddfinv.backend.repository.UpgradeRequestRepository;
 import com.ddfinv.core.repository.UserAccountRepository;
 
     //TODO: finish adding guest service related logic
+@Service
 public class GuestService {
     private final UserAccountService userAccountService;
     private final UserAccountRepository userAccountRepository;

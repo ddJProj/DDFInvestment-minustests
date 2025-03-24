@@ -31,6 +31,7 @@ import com.ddfinv.core.repository.UserAccountRepository;
  * https://medium.com/@th.chousiadas/spring-security-architecture-of-jwt-authentication-a7967a8ee309
  * 
  */
+@Service
 public class AuthenticationService {
 
     private final UserAccountRepository userAccountRepository;

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ddfinv.backend.dto.DTOMapper;
 import com.ddfinv.backend.repository.ClientRepository;
@@ -11,6 +12,7 @@ import com.ddfinv.backend.repository.EmployeeRepository;
 import com.ddfinv.core.domain.enums.Role;
 import com.ddfinv.core.repository.UserAccountRepository;
 
+@Service
 public class AdminService {
 
 
