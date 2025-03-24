@@ -17,7 +17,6 @@ public interface ClientRepository extends JpaRepository<Client, Long>{
 
     Optional<Client> findByAssignedEmployee(Employee employee);
 
-    boolean existsByEmployeeId(String employeeId);
-
+    boolean existsByAssignedEmployee_EmployeeId(String employeeId);
 
 }
