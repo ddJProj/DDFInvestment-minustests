@@ -43,7 +43,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
      */
     boolean existsByRole(Role targetRole);
 
-    int numOfRoles(Role role);
+    //int numOfRoles(Role role);
 
     int countByRole(Role role);
 }
