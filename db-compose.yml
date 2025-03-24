@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.11
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=ddfinv
+      - MARIADB_ROOT_HOST=% # allows root to connect from any host
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      # initialization script  - commented out for now
+      # - ./init-db-script.sql:/docker-entrypoint-initdb.d/init-db-script.sql
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-authentication-plugin=mysql_native_password
+      --require-secure-transport=0
+
+volumes:
+  db-data:
