@@ -65,7 +65,11 @@ public class UserAccount {
      * The set of permissions that this UserAccount holds, based on their role
      */
     @ManyToMany(fetch=FetchType.EAGER)
-    @JoinTable(name = "permission", joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @JoinTable(
+        name = "useraccount_permissions", 
+        joinColumns = @JoinColumn(name="user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
     private Set<Permission> permissions = new HashSet<>();
 
     /**
