@@ -12,9 +12,7 @@ ext {
 subprojects {
     group = 'com.DDFInv'
     version = '0.0.1-SNAPSHOT'
-
     apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
     java {
@@ -32,6 +30,7 @@ subprojects {
     dependencyManagement {
         imports {
             mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+            mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.2"
         }
     }
 
