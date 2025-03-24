@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.oauth2.client.ClientRegistrationsBeanDefinitionParser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class UserAccountService {
     private final ClientRepository clientRepository; 
 
     @Autowired
-    public UserAccountService (UserAccountRepository userAccountRepository, PermissionRepository permissionRepository, AuthenticationService authService, DTOMapper dtoMapper, PasswordEncoder passwordEncoder, EmployeeRepository employeeRepository, ClientRepository clientRepository){
+    public UserAccountService (UserAccountRepository userAccountRepository, PermissionRepository permissionRepository, @Lazy AuthenticationService authService, DTOMapper dtoMapper, PasswordEncoder passwordEncoder, EmployeeRepository employeeRepository, ClientRepository clientRepository){
         this.userAccountRepository = userAccountRepository;
         this.employeeRepository = employeeRepository;
         this.clientRepository = clientRepository;
@@ -248,7 +249,7 @@ public class UserAccountService {
         UserAccount userAccount = userAccountRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("User with the provided id value could not be found: " + id));
 
-        if (userAccount.getRole() == Role.admin && userAccountRepository.numOfRoles(Role.admin) <= 1){
+        if (userAccount.getRole() == Role.admin && userAccountRepository.countByRole(Role.admin) <= 1){
             throw new IllegalOperationException("You cannot remove the only admin UserAccount from the system.");
         }
 
