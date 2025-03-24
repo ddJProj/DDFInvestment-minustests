@@ -29,7 +29,7 @@ public class Employee {
     @JoinColumn(name = "user_id" ,unique = true)
     private UserAccount userAccount;
 
-    @OneToMany(mappedBy = "assigned_employee", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "assignedEmployee", fetch = FetchType.LAZY)
     private Set<Client> clientList = new HashSet<>();
     
 
