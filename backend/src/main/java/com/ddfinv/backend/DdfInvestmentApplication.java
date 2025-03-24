@@ -15,7 +15,7 @@ import static org.springframework.boot.SpringApplication.run;
 
 @SpringBootApplication
 @EntityScan("com.ddfinv.core.domain")
-@EnableJpaRepositories("com.ddfinv.core.repository")
+@EnableJpaRepositories({"com.ddfinv.core.repository", "com.ddfinv.backend.repository"})
 @ComponentScan({"com.ddfinv.core","com.ddfinv.backend"})
 public class DdfInvestmentApplication {
 
