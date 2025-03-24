@@ -3,6 +3,8 @@ package com.ddfinv.backend.dto;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import com.ddfinv.backend.dto.accounts.ClientDTO;
 import com.ddfinv.backend.dto.accounts.EmployeeDTO;
@@ -15,12 +17,13 @@ import com.ddfinv.core.domain.GuestUpgradeRequest;
 import com.ddfinv.core.domain.Permission;
 import com.ddfinv.core.domain.UserAccount;
 
+@Component
 public class DTOMapper {
 
     private final AuthenticationService authservice;
 
     @Autowired
-    public DTOMapper(AuthenticationService authService){
+    public DTOMapper(@Lazy AuthenticationService authService){
         this.authservice = authService;
     }
 
