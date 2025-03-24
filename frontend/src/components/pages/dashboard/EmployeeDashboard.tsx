@@ -243,3 +243,5 @@ const EmployeeDashboard: React.FC = () => {
     </div>
   );
 };
+
+export default EmployeeDashboard;
