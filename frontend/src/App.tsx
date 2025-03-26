@@ -12,6 +12,7 @@ import Dashboard from './components/pages/dashboard/Dashboard';
 import UnauthorizedPage from './components/pages/errors/UnauthorizedPage';
 import { authUtils } from './utils/auth.utils';
 import { UserRole } from './types/auth.types';
+import { ROUTES } from "./constants/router.constants";
 
 // Create auth context for global state management
 export const AuthContext = createContext<{
@@ -61,11 +62,11 @@ const App: React.FC = () => {
     allowedRoles?: string[];
   }) => {
     if (!isAuthenticated) {
-      return <Navigate to="/login" />;
+      return <Navigate to={ROUTES.LOGIN} />;
     }
 
     if (allowedRoles.length > 0 && userRole && !allowedRoles.includes(userRole)) {
-      return <Navigate to="/unauthorized" />;
+      return <Navigate to={ROUTES.UNAUTHORIZED} />;
     }
 
     return <>{children}</>;
@@ -80,13 +81,13 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           {/* Public Routes */}
-          <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
-          <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Registration />} />
-          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+          <Route path={ROUTES.LOGIN} element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} /> : <Login />} />
+          <Route path={ROUTES.REGISTER} element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} /> : <Registration />} />
+          <Route path={ROUTES.UNAUTHORIZED} element={<UnauthorizedPage />} />
           
           {/* Protected Routes */}
           <Route 
-            path="/dashboard"
+            path={ROUTES.DASHBOARD}
             element={
               <ProtectedRoute>
                 <Dashboard />
@@ -95,7 +96,7 @@ const App: React.FC = () => {
           />
           
           <Route 
-            path="/dashboard/admin"
+            path={ROUTES.ADMIN}
             element={
               <ProtectedRoute allowedRoles={[UserRole.Admin]}>
                 <AdminDashboard />
@@ -104,7 +105,7 @@ const App: React.FC = () => {
           />
           
           <Route 
-            path="/dashboard/employee"
+            path={ROUTES.EMPLOYEE}
             element={
               <ProtectedRoute allowedRoles={[UserRole.Employee]}>
                 <EmployeeDashboard />
@@ -113,7 +114,7 @@ const App: React.FC = () => {
           />
           
           <Route 
-            path="/dashboard/client"
+            path={ROUTES.CLIENT}
             element={
               <ProtectedRoute allowedRoles={[UserRole.Client]}>
                 <ClientDashboard />
@@ -122,7 +123,7 @@ const App: React.FC = () => {
           />
           
           {/* Redirect to login for any other routes */}
-          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
+          <Route path="*" element={<Navigate to={isAuthenticated ? ROUTES.DASHBOARD : ROUTES.LOGIN} />} />
         </Routes>
       </Router>
     </AuthContext.Provider>
