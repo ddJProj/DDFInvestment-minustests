@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 // https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/crypto/bcrypt/BCrypt.html
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -126,10 +127,16 @@ public class AuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         UserDetails userDetails = userDetailService.loadUserByUsername(request.getEmail());
-        String jwtTaken = jwtService.generateToken(userDetails);
+        String jwtToken = jwtService.generateToken(userDetails);
+
+
+        UserAccount userAccount = userAccountRepository.findByEmail(request.getEmail())
+        .orElseThrow(() -> new UsernameNotFoundException("A matching UserAccount was not found."));
+
 
         return AuthenticationResponse.builder()
-        .token(jwtTaken)
+        .token(jwtToken)
+        .role(userAccount.getRole().name()) // including the role in auth response
         .build();
 
     }
