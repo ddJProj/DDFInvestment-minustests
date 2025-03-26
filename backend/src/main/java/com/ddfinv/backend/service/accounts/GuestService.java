@@ -24,30 +24,16 @@ import com.ddfinv.core.repository.UserAccountRepository;
     //TODO: finish adding guest service related logic
 @Service
 public class GuestService {
-    private final UserAccountService userAccountService;
     private final UserAccountRepository userAccountRepository;
     private final UpgradeRequestRepository upgradeRequestRepository;
     private final DTOMapper dtoMapper;
 
 
-
     @Autowired
-    public GuestService(UserAccountRepository userAccountRepository, UserAccountService userAccountService, DTOMapper dtoMapper, UpgradeRequestRepository upgradeRequestRepository){
+    public GuestService(UserAccountRepository userAccountRepository, DTOMapper dtoMapper, UpgradeRequestRepository upgradeRequestRepository){
         this.userAccountRepository = userAccountRepository;
-        this.userAccountService = userAccountService;
         this.upgradeRequestRepository = upgradeRequestRepository;
         this.dtoMapper = dtoMapper;
-    }
-
-    @Transactional
-    public UserAccountDTO registerNewGuest(UserAccountDTO dto){
-        
-        dto.setRole(Role.guest);
-
-        UserAccountDTO newAccount = userAccountService.createUserAcount(dto);
-        
-        return newAccount;
-        
     }
 
     @Transactional
