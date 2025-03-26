@@ -1,7 +1,10 @@
 package com.ddfinv.backend.service.auth;
 
 import java.lang.Object;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -134,9 +137,18 @@ public class AuthenticationService {
         .orElseThrow(() -> new UsernameNotFoundException("A matching UserAccount was not found."));
 
 
+        Set<String> permissionStrings = userAccount.getPermissions().stream()
+        .map(permission -> permission.getPermissionType().name())
+        .collect(Collectors.toSet());
+
         return AuthenticationResponse.builder()
         .token(jwtToken)
         .role(userAccount.getRole().name()) // including the role in auth response
+        .id(userAccount.getId())
+        .email(userAccount.getEmail())
+        .firstName(userAccount.getFirstName())
+        .lastName(userAccount.getLastName())
+        .permissions(permissionStrings)
         .build();
 
     }
