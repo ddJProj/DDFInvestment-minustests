@@ -7,6 +7,9 @@ import { useLogin } from "../../../hooks/useLogin";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import { ROUTES } from "../../../constants/router.constants";
 import logo from "../../../assets/dd-asset-management-high-resolution-logo-transparent.svg";
+import { testDirectAuth } from "../../../services/api.service";
+import axios from "axios";
+
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address").nonempty("Email is required"),
@@ -28,6 +31,28 @@ const Login: React.FC = () => {
 
   const onSubmit = async (data: LoginFormInputs) => {
     await handleLogin(data.email, data.password);
+  };
+
+  const testDirectAuthentication = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/api/auth/authenticate',
+        {
+          email: 'admin@example.com',
+          password: 'password'
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      console.log('Auth Success:', response);
+      return response.data;
+    } catch (error) {
+      console.error('Auth Error:', error);
+      return null;
+    }
   };
 
   return (
@@ -97,6 +122,15 @@ const Login: React.FC = () => {
               >
                 {isSubmitting ? "Logging in..." : "Sign in"}
               </button>
+
+              <button
+                type="button"
+                onClick={testDirectAuthentication}
+                className="mt-2 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded"
+              >
+                Test Direct Auth
+              </button>
+
             </form>
             <div className="text-center">
               <Link
