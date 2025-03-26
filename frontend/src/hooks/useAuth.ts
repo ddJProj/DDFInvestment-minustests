@@ -1,10 +1,14 @@
+import { Permissions } from './../types/auth.types';
+import { Login } from './../components/navigation/Navigate';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/hooks/useAuth.ts
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api.service';
 import { authUtils } from '../utils/auth.utils';
 import { UserRole } from '../types/auth.types';
+import { ROUTES } from "../constants/router.constants";
+import { jwtDecode } from 'jwt-decode';
 
 export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -18,34 +22,44 @@ export const useAuth = () => {
     setLoading(true);
     setError(null);
 
+
     try {
       const response = await apiService.auth.login(email, password);
-
       // Store the token and user info
-      const { token, role } = response.data;
+      const authData = response.data;
+
+      // attempt to map the strings of permissions to Permission enum values
+      const mappedPermissions = authData.permissions ? authData.permissions.map((permString: string) =>{
+        return Permissions[permString as keyof typeof Permissions] || null;
+      }).filter(Boolean) : [];
+
 
       // TODO: add logic to extract role from JWT payload?
       const userData = {
-        email,
-        role: role || UserRole.Guest, // fallback to userRole Guest / limited permission
+        id: authData.id || 0, // if one isnt provided automatically by db/backend
+        email: authData.email || email,
+        firstName: authData.firstName || '',
+        lastName: authData.lastName ||  '',
+        role: authData.role || UserRole.Guest, // fallback to userRole Guest / limited permission
+        permissions: mappedPermissions
       };
 
-      authUtils.setAuthData(token, userData);
+      authUtils.setAuthData(authData.token, userData);
       setIsAuthenticated(true);
 
       // redirect based on role
       switch(userData.role){
         case UserRole.Admin:
-          navigate('/dashboard/admin');
+          navigate(ROUTES.ADMIN);
           break;
         case UserRole.Employee:
-          navigate('/dashboard/employee');
+          navigate(ROUTES.EMPLOYEE);
           break;
         case UserRole.Client:
-          navigate('/dashboard/client');
+          navigate(ROUTES.CLIENT);
           break;
         default:
-          navigate('/dashboard');
+          navigate(ROUTES.DASHBOARD);
       }
 
       return true;
@@ -90,7 +104,7 @@ export const useAuth = () => {
   const logout = () => {
     authUtils.clearAuthData();
     setIsAuthenticated(false);
-    navigate('/login');
+    navigate(ROUTES.LOGIN);
   };
 
   return {
