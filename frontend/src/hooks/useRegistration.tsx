@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api.service';
+import { ROUTES } from "../constants/router.constants";
 
 export function useRegister() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +22,7 @@ export function useRegister() {
 
     try {
       await apiService.auth.register(firstName, lastName, email, password);
-      navigate('/login', {
+      navigate(ROUTES.LOGIN, {
         state: {
           message:
             'Registration successful! Please log in with your new account.',

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { useRegister } from "../../../hooks/useRegistration";
 import logo from "../../../assets/dd-asset-management-high-resolution-logo-transparent.svg";
 import { Link } from "react-router-dom";
+import { ROUTES } from "../../../constants/router.constants";
 
 // schema for validation
 const registrationSchema = z
@@ -167,7 +168,7 @@ const Registration: React.FC = () => {
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?{" "}
                 <Link
-                  to="/login"
+                  to={ROUTES.LOGIN}
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Return to login

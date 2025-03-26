@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useLogin } from "../../../hooks/useLogin";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { ROUTES } from "../../../constants/router.constants";
 import logo from "../../../assets/dd-asset-management-high-resolution-logo-transparent.svg";
 
 const loginSchema = z.object({
@@ -99,7 +100,7 @@ const Login: React.FC = () => {
             </form>
             <div className="text-center">
               <Link
-                to="/register"
+                to={ROUTES.REGISTER}
                 className="text-primary-600 hover:underline dark:text-primary-500"
               >
                 Need an account? Register here.
