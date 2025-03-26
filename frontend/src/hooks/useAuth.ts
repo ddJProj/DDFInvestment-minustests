@@ -22,27 +22,30 @@ export const useAuth = () => {
       const response = await apiService.auth.login(email, password);
 
       // Store the token and user info
-      const { token } = response.data;
+      const { token, role } = response.data;
 
       // TODO: add logic to extract role from JWT payload?
       const userData = {
         email,
-        role: UserRole.Guest, // fallback
+        role: role || UserRole.Guest, // fallback to userRole Guest / limited permission
       };
 
       authUtils.setAuthData(token, userData);
       setIsAuthenticated(true);
 
       // redirect based on role
-      const role = userData.role;
-      if (role === UserRole.Admin) {
-        navigate('/dashboard/admin');
-      } else if (role === UserRole.Employee) {
-        navigate('/dashboard/employee');
-      } else if (role === UserRole.Client) {
-        navigate('/dashboard/client');
-      } else {
-        navigate('/dashboard');
+      switch(userData.role){
+        case UserRole.Admin:
+          navigate('/dashboard/admin');
+          break;
+        case UserRole.Employee:
+          navigate('/dashboard/employee');
+          break;
+        case UserRole.Client:
+          navigate('/dashboard/client');
+          break;
+        default:
+          navigate('/dashboard');
       }
 
       return true;
@@ -69,7 +72,7 @@ export const useAuth = () => {
     setError(null);
 
     try {
-      await apiService.auth.registerGuest(firstName, lastName, email, password);
+      await apiService.auth.register(firstName, lastName, email, password);
       navigate('/login', {
         state: { message: 'Registration successful! Please log in.' },
       });
