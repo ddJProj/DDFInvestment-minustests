@@ -1,7 +1,7 @@
+// src/hooks/useAuth.ts
 import { Permissions } from './../types/auth.types';
 import { Login } from './../components/navigation/Navigate';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/hooks/useAuth.ts
 import { useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api.service';
@@ -47,20 +47,38 @@ export const useAuth = () => {
       authUtils.setAuthData(authData.token, userData);
       setIsAuthenticated(true);
 
+      // the main dashboard will handle role specific navigation
+      navigate(ROUTES.DASHBOARD);
+
+      /* console logging for testing:
+      console.log("Role from auth response:", userData.role);
+      console.log("Admin enum value:", UserRole.Admin);
+      console.log("Routes.ADMIN:", ROUTES.ADMIN);
+
+      // comparing the roles:
+      console.log("Role matches Admin?", userData.role === UserRole.Admin);
+      console.log("Role matches Employee?", userData.role === UserRole.Employee);
+      console.log("Role matches Client?", userData.role === UserRole.Client);
+      console.log("Role matches Guest?", userData.role === UserRole.Guest);
+      */
       // redirect based on role
-      switch(userData.role){
-        case UserRole.Admin:
-          navigate(ROUTES.ADMIN);
-          break;
-        case UserRole.Employee:
-          navigate(ROUTES.EMPLOYEE);
-          break;
-        case UserRole.Client:
-          navigate(ROUTES.CLIENT);
-          break;
-        default:
-          navigate(ROUTES.DASHBOARD);
-      }
+      // switch(userData.role){
+      //   case UserRole.Admin:
+      //     console.log("Navigating to admin dashboard...");
+      //     setTimeout(() => {
+      //       navigate(ROUTES.ADMIN);
+      //       console.log("Navigation should have completed");
+      //     }, 100);
+      //     break;
+      //   case UserRole.Employee:
+      //     navigate(ROUTES.EMPLOYEE);
+      //     break;
+      //   case UserRole.Client:
+      //     navigate(ROUTES.CLIENT);
+      //     break;
+      //   default:
+      //     navigate(ROUTES.DASHBOARD);
+      // }
 
       return true;
 
