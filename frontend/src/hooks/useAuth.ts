@@ -23,9 +23,11 @@ export const useAuth = () => {
 
       // Store the token and user info
       const { token } = response.data;
+
+      // TODO: add logic to extract role from JWT payload?
       const userData = {
         email,
-        role: response.data.role || UserRole.Restricted, // default to Restricted role if none provided
+        role: UserRole.Guest, // fallback
       };
 
       authUtils.setAuthData(token, userData);
@@ -44,7 +46,9 @@ export const useAuth = () => {
       }
 
       return true;
+
     } catch (err: any) {
+      console.error('Error logging in: ', err);  // added to troubleshoot
       setError(
         err.response?.data?.message ||
           'Login failed. Please check your credentials.'
