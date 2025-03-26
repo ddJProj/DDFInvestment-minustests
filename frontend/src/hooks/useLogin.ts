@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "./useAuth";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../constants/router.constants";
 
 export const useLogin = () => {
   const { login } = useAuth();
@@ -15,11 +16,9 @@ export const useLogin = () => {
 
     try {
       const result = await login(email, password);
-      if (result) {
-        navigate("/dashboard");
-      } else {
-        setError("Invalid email or password");
-      }
+
+      return result;
+
     } catch (err) {
       setError("An error occurred during login");
     } finally {
