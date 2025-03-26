@@ -12,12 +12,14 @@ import com.ddfinv.backend.exception.ResourceNotFoundException;
 import com.ddfinv.backend.service.accounts.GuestService;
 import com.ddfinv.core.exception.ApplicationException;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
 @RequestMapping("/api/guests")
+@CrossOrigin(origins = "http://localhost:5173")
 public class GuestController {
 
     private final GuestService guestService;
@@ -28,19 +30,6 @@ public class GuestController {
         
     }
 
-    /**
-     * 
-     * @param userAccountDTO
-     * @return
-     */
-    @PostMapping("/register")
-    public ResponseEntity<?> registerNewGuest(@RequestBody UserAccountDTO userAccountDTO) {
-        
-        UserAccountDTO newGuest = guestService.registerNewGuest(userAccountDTO);
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(newGuest);
-    }
-    
     @PostMapping("/request-client-upgrade")
     public ResponseEntity<?> requestClientUpgrade(@RequestBody UpgradeRequestDTO upgradeDTO) throws ResourceNotFoundException, ApplicationException {
             
