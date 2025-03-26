@@ -20,7 +20,7 @@ export function useRegister() {
     setError(null);
 
     try {
-      await apiService.auth.registerGuest(firstName, lastName, email, password);
+      await apiService.auth.register(firstName, lastName, email, password);
       navigate('/login', {
         state: {
           message:
