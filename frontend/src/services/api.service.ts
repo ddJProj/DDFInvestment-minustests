@@ -1,4 +1,3 @@
-import { request } from './api.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-useless-catch */
 // src/services/api.service..ts
@@ -122,7 +121,7 @@ export const apiService = {
 };
 
 // general request function 
-export const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
+export const apiRequest = async <T>(config: AxiosRequestConfig): Promise<T> => {
   try {
     const response = await axiosInstance(config);
     return response.data;
