@@ -1,3 +1,4 @@
+import { request } from './api.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-useless-catch */
 // src/services/api.service..ts
@@ -33,7 +34,9 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle token expiration
+    // added to improve error tracking/handling
+    console.error('API error: ', error.request?.status, error.response?.data); 
+    // token expiration
     if (error.response && error.response.status === 401) {
       authUtils.clearAuthData();
       window.location.href = '/login';
@@ -48,6 +51,7 @@ export const apiService = {
   auth: {
     login: (email: string, password: string) =>
       axiosInstance.post('/auth/authenticate', { email, password }),
+    
     register: (
       firstName: string,
       lastName: string,
@@ -55,20 +59,6 @@ export const apiService = {
       password: string
     ) =>
       axiosInstance.post('/auth/register', {
-        firstName,
-        lastName,
-        email,
-        password,
-      }),
-
-    // guest specific endpoint
-    registerGuest: (
-      firstName: string,
-      lastName: string,
-      email: string,
-      password: string
-    ) =>
-      axiosInstance.post('/guests/register', {
         firstName,
         lastName,
         email,
