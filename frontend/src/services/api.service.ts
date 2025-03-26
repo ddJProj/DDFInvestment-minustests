@@ -44,6 +44,11 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+
+
+
+
+
 // API service endpoints
 export const apiService = {
   // authentication endpoints
@@ -120,6 +125,32 @@ export const apiService = {
   },
 };
 
+// test for direct auth:
+export const testDirectAuth = () => {
+  console.log("Testing direct authentication...");
+  
+  axios.post('http://localhost:8080/api/auth/authenticate', {
+    email: 'admin@example.com',
+    password: 'password'
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    console.log("Authentication successful:", response.data);
+    return response.data;
+  })
+  .catch(error => {
+    console.error("Authentication failed:", error);
+    console.error("Status:", error.response?.status);
+    console.error("Data:", error.response?.data);
+    console.error("Headers:", error.response?.headers);
+    throw error;
+  });
+};
+
+
 // general request function 
 export const apiRequest = async <T>(config: AxiosRequestConfig): Promise<T> => {
   try {
@@ -128,4 +159,7 @@ export const apiRequest = async <T>(config: AxiosRequestConfig): Promise<T> => {
   } catch (error) {
     throw error;
   }
+
+
+
 };
