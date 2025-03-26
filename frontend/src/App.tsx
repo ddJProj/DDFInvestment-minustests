@@ -78,7 +78,6 @@ const App: React.FC = () => {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, userRole, logout }}>
-      <Router>
         <Routes>
           {/* Public Routes */}
           <Route path={ROUTES.LOGIN} element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} /> : <Login />} />
@@ -125,7 +124,6 @@ const App: React.FC = () => {
           {/* Redirect to login for any other routes */}
           <Route path="*" element={<Navigate to={isAuthenticated ? ROUTES.DASHBOARD : ROUTES.LOGIN} />} />
         </Routes>
-      </Router>
     </AuthContext.Provider>
   );
 };
