@@ -38,13 +38,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         // add console logging step to debug auth / dev
         System.out.println("Working on request: "+ request.getMethod() + " " + request.getRequestURI());
 
+        System.out.println ("Processing a request: "+ request.getMethod()+ " " + request.getRequestURI());
+        System.out.println("Authorization header: " + (request.getHeader("Authorization") != null ? "Present" : "Missing"));
+
                     
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
 
-        if(authHeader == null || !authHeader.startsWith("Bearer")){
+        if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
             return;
         }
