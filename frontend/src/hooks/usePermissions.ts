@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { fetchSession } from "../utils/session.utils";
 import { UserRole, Permissions } from "../types/auth.types";
 import { ROLE_PERMISSIONS } from "../utils/permissions.utils";
+import { authUtils } from "../utils/auth.utils";
 
 interface UsePermissionsResult {
   hasPermission: (permission: Permissions) => boolean;
@@ -27,25 +28,47 @@ export function usePermissions(): UsePermissionsResult {
     const token = localStorage.getItem("authToken");
     if (token) {
       setIsLoading(true);
-      fetchSession(token)
-        .then((data) => {
-          const userRole = data.role as UserRole;
-          setRole(userRole);
 
-          const rolePermissions = computeRolePermissions(userRole);
-          const combinedPermissions = new Set(rolePermissions);
+      const userData = authUtils.getUser();
 
-          data.permissions.forEach((perm: Permissions) => combinedPermissions.add(perm));
-          setUserPermissions(combinedPermissions);
-          setIsLoading(false);
-        })
-        .catch(() => {
-          setError("Failed to fetch user session");
-          setIsLoading(false);
-        });
-    } else {
+      if (userData){
+        const userRole = userData.role as UserRole
+        setRole(userRole);
+
+        const rolePermissions = computeRolePermissions(userRole);
+        const combinedPermissions = new Set(rolePermissions);
+
+
+        if (userData.permissions && Array.isArray(userData.permissions)){
+          userData.permissions.forEach((perm: Permissions) => combinedPermissions.add(perm));
+        }
+        setUserPermissions(combinedPermissions);
+      }
+
+      setIsLoading(false);
+    }else{
       setIsLoading(false);
     }
+    // old perm logic (before addition of extra details to token)
+    //   fetchSession(token)
+    //     .then((data) => {
+    //       const userRole = data.role as UserRole;
+    //       setRole(userRole);
+
+    //       const rolePermissions = computeRolePermissions(userRole);
+    //       const combinedPermissions = new Set(rolePermissions);
+
+    //       data.permissions.forEach((perm: Permissions) => combinedPermissions.add(perm));
+    //       setUserPermissions(combinedPermissions);
+    //       setIsLoading(false);
+    //     })
+    //     .catch(() => {
+    //       setError("Failed to fetch user session");
+    //       setIsLoading(false);
+    //     });
+    // } else {
+    //   setIsLoading(false);
+    // }
   }, []);
 
   const computeRolePermissions = useCallback((role: UserRole): Set<Permissions> => {
