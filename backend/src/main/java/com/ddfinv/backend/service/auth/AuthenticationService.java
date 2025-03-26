@@ -7,6 +7,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ import com.ddfinv.backend.dto.accounts.UserAccountDTO;
 import com.ddfinv.backend.dto.auth.AuthenticationRequest;
 import com.ddfinv.backend.dto.auth.AuthenticationResponse;
 import com.ddfinv.backend.dto.auth.RegisterAuthRequest;
+import com.ddfinv.backend.exception.security.AuthenticationException;
 import com.ddfinv.backend.exception.security.InvalidPasswordException;
 import com.ddfinv.backend.exception.validation.EmailValidationException;
 import com.ddfinv.backend.service.UserDetailService;
@@ -125,16 +127,29 @@ public class AuthenticationService {
      *
      * @param request
      * @return
-     */
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+          * @throws InvalidPasswordException 
+          */
+        public AuthenticationResponse authenticate(AuthenticationRequest request) throws InvalidPasswordException{
+        
+        try{
+            // troubleshooting output
+            System.out.println("Attempting to authenticate the User login: "+ request.getEmail());
+            System.out.println("Password's length in characters is : "+ request.getPassword().length());
+
+        UserAccount userAccount = userAccountRepository.findByEmail(request.getEmail())
+        .orElseThrow(() -> new UsernameNotFoundException("A matching UserAccount was not found."));
+
+        boolean passwordsAreMatching = pwEncoder.matches(request.getPassword(), userAccount.getHashedPassword());
+        System.out.println("The passwords are matching: "+ passwordsAreMatching);
+
+        if (!passwordsAreMatching){
+            throw new InvalidPasswordException("Invalid password entered.");
+        }
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         UserDetails userDetails = userDetailService.loadUserByUsername(request.getEmail());
         String jwtToken = jwtService.generateToken(userDetails);
-
-
-        UserAccount userAccount = userAccountRepository.findByEmail(request.getEmail())
-        .orElseThrow(() -> new UsernameNotFoundException("A matching UserAccount was not found."));
 
 
         Set<String> permissionStrings = userAccount.getPermissions().stream()
@@ -151,9 +166,20 @@ public class AuthenticationService {
         .permissions(permissionStrings)
         .build();
 
+        }catch(InvalidPasswordException e){
+            System.out.println("The authentication process failed: "+ e.getMessage());
+            throw e;
+        } catch (Exception e){
+            System.out.println("An unexpected error occurred during the authentication process: "+ e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 
 
 }
+
+
+
 //TODO : finish documentation
