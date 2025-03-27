@@ -25,6 +25,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.ddfinv.backend.controller.auth.JwtAuthenticationFilter;
 
 /*
  * https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html

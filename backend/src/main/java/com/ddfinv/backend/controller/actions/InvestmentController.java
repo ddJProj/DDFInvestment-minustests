@@ -1,4 +1,4 @@
-package com.ddfinv.backend.controller;
+package com.ddfinv.backend.controller.actions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
