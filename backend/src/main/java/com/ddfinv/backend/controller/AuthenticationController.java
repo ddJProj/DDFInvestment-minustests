@@ -1,5 +1,6 @@
 package com.ddfinv.backend.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -64,11 +65,15 @@ public class AuthenticationController {
         
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> testAuthEndpoint() {
-        return ResponseEntity.ok("Endpoint is correctly authorizing.");
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "You have successfully logged out of the system.");
+        return ResponseEntity.ok(response);
     }
     
+
+
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -90,7 +95,11 @@ public class AuthenticationController {
         }
     }
 
-
+    @GetMapping("/test")
+    public ResponseEntity<String> testAuthEndpoint() {
+        return ResponseEntity.ok("Endpoint is correctly authorizing.");
+    }
+    
 
     
 }
