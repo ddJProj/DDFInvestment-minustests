@@ -45,10 +45,6 @@ axiosInstance.interceptors.response.use(
 );
 
 
-
-
-
-
 // API service endpoints
 export const apiService = {
   // authentication endpoints
@@ -69,12 +65,19 @@ export const apiService = {
         password,
       }),
 
+    logout: () => axiosInstance.post('/auth/logout'),
+
     // client upgrade request
     requestUpgrade: (userAccountId: number, details: string) =>
       axiosInstance.post('/guests/request-client-upgrade', {
         userAccountId,
         details,
       }),
+
+    // Get a user's upgrade requests
+    getUserUpgradeRequests: (userAccountId: number) =>
+      axiosInstance.get(`/guests/upgrade-requests/${userAccountId}`),
+
   },
 
   // user account endpoints
@@ -108,6 +111,8 @@ export const apiService = {
     getAllUsers: () => axiosInstance.get('/users'),
     getUsersByRole: (role: string) =>
       axiosInstance.get(`/users/by-role/${role}`),
+    changeUserRole: (id: number, newRole: string) =>
+      axiosInstance.put(`/users/${id}/role?updatedRole=${newRole}`),
   },
 
   // employee endpoints
@@ -117,11 +122,22 @@ export const apiService = {
       axiosInstance.get(`/client/by-employee/${employeeId}`),
     assignClient: (clientId: string, employeeId: string) =>
       axiosInstance.post('/client/assign', { clientId, employeeId }),
-  },
+    // Added new methods to support employee dashboard
+    getAllEmployees: () => axiosInstance.get('/employees'),
+    getEmployeeById: (id: number) => axiosInstance.get(`/employees/${id}`),
+    getEmployeeByUserId: (userId: number) => axiosInstance.get(`/employees/by-user/${userId}`),
+    getEmployeeByEmployeeId: (employeeId: string) => axiosInstance.get(`/employees/employee-id/${employeeId}`),
+    updateEmployee: (id: number, data: any) => axiosInstance.put(`/employees/${id}`, data),
+},
 
   // client endpoints
   client: {
     getClientDetails: (id: number) => axiosInstance.get(`/client/${id}`),
+    getAllClients: () => axiosInstance.get('/client'),
+    getClientByUserId: (userId: number) => axiosInstance.get(`/client/by-user/${userId}`),
+    getClientByClientId: (clientId: string) => axiosInstance.get(`/client/client-id/${clientId}`),
+    updateClient: (id: number, data: any) => axiosInstance.put(`/client/${id}`, data),
+    getClientInvestments: (clientId: string) => axiosInstance.get(`/investments/client/${clientId}`),
   },
 };
 
