@@ -1,16 +1,19 @@
 // src/components/pages/dashboard/AdminDashboard.tsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { UserRole } from '../../../types/auth.types';
 import { authUtils } from '../../../utils/auth.utils';
+import { apiService } from '../../../services/api.service';
+import { useAuth } from '../../../hooks/useAuth';
 
-// Define interfaces for our data structures
+// interfaces for our data structures
 interface SystemInfo {
   totalUserAccounts: number;
   totalAdminAccounts: number;
   totalEmployeeAccounts: number;
   totalClientAccounts: number;
   totalGuestAccounts: number;
+  countEmployeeRepo?: number;
+  countClientRepo?: number;
 }
 
 interface UpgradeRequest {
@@ -30,33 +33,12 @@ interface User {
   firstName: string;
   lastName: string;
   role: string;
+  permissions?: string[];
 }
 
-// Simple API service for admin endpoints
-const adminApi = {
-  getSystemInfo: () => axios.get('/api/admin/system-info'),
-  getPendingRequests: () => axios.get('/api/admin/pending-requests'),
-  approveRequest: (id: number, clientData: any) => 
-    axios.put(`/api/admin/upgrade-requests/${id}/approve`, clientData),
-  rejectRequest: (id: number, reason: string) => 
-    axios.put(`/api/admin/upgrade-requests/${id}/reject`, { reason }),
-  getAllUsers: () => axios.get('/api/users'),
-  getUsersByRole: (role: string) => axios.get(`/api/users/by-role/${role}`),
-  changeUserRole: (id: number, newRole: string) => 
-    axios.put(`/api/users/${id}/role?updatedRole=${newRole}`)
-};
-
-// Add authorization header to all requests
-axios.interceptors.request.use(config => {
-  const token = authUtils.getToken();
-  if (token) {
-    config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
 const AdminDashboard: React.FC = () => {
+  const { logout } = useAuth();
+  
   // state for the active tab
   const [activeTab, setActiveTab] = useState('dashboard');
   
@@ -76,23 +58,13 @@ const AdminDashboard: React.FC = () => {
     message: string
   } | null>(null);
 
-  // Fetch system info for the dashboard
+  // fetch system info for the dashboard
   useEffect(() => {
     const fetchSystemInfo = async () => {
       setLoading(true);
       try {
-        // in dev use mock data until API is ready
-        // in production, use the actual API
-        // Const response = await adminApi.getSystemInfo();
-        
-        // mock data for development
-        setSystemInfo({
-          totalUserAccounts: 45,
-          totalAdminAccounts: 3,
-          totalEmployeeAccounts: 12,
-          totalClientAccounts: 25,
-          totalGuestAccounts: 5
-        });
+        const response = await apiService.admin.getSystemInfo();
+        setSystemInfo(response.data);
         setLoading(false);
       } catch (err) {
         setError('Failed to load system information');
@@ -106,37 +78,13 @@ const AdminDashboard: React.FC = () => {
     }
   }, [activeTab]);
 
-  // Fetch pending upgrade requests
+  // fetch pending upgrade requests
   useEffect(() => {
     const fetchPendingRequests = async () => {
       setLoading(true);
       try {
-        // foor development use mock data
-        // const response = await adminApi.getPendingRequests();
-        
-        // mock data
-        setPendingRequests([
-          {
-            id: 1,
-            userAccountId: 101,
-            userEmail: 'john.doe@example.com',
-            userFirstName: 'John',
-            userLastName: 'Doe',
-            requestDate: '2024-03-15T14:30:00',
-            details: 'Interested in investment opportunities in tech sector',
-            status: 'PENDING'
-          },
-          {
-            id: 2,
-            userAccountId: 102,
-            userEmail: 'jane.smith@example.com',
-            userFirstName: 'Jane',
-            userLastName: 'Smith',
-            requestDate: '2024-03-18T09:15:00',
-            details: 'Looking for retirement planning advice',
-            status: 'PENDING'
-          }
-        ]);
+        const response = await apiService.admin.getPendingRequests();
+        setPendingRequests(response.data);
         setLoading(false);
       } catch (err) {
         setError('Failed to load pending requests');
@@ -150,59 +98,18 @@ const AdminDashboard: React.FC = () => {
     }
   }, [activeTab]);
 
-  // Fetch users based on filter
+  // fetch users based on filter
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        // For development use mock data
-        // const response = filterRole 
-        //   ? await adminApi.getUsersByRole(filterRole)
-        //   : await adminApi.getAllUsers();
-        
-        // Mock data
-        const allUsers = [
-          {
-            id: 1,
-            email: 'admin@example.com',
-            firstName: 'Admin',
-            lastName: 'User',
-            role: UserRole.Admin
-          },
-          {
-            id: 101,
-            email: 'john.doe@example.com',
-            firstName: 'John',
-            lastName: 'Doe',
-            role: UserRole.Guest
-          },
-          {
-            id: 102,
-            email: 'jane.smith@example.com',
-            firstName: 'Jane',
-            lastName: 'Smith',
-            role: UserRole.Guest
-          },
-          {
-            id: 201,
-            email: 'sarah.johnson@example.com',
-            firstName: 'Sarah',
-            lastName: 'Johnson',
-            role: UserRole.Employee
-          },
-          {
-            id: 301,
-            email: 'robert.williams@example.com',
-            firstName: 'Robert',
-            lastName: 'Williams',
-            role: UserRole.Client
-          }
-        ];
-        
-        setUsers(filterRole 
-          ? allUsers.filter(user => user.role === filterRole)
-          : allUsers
-        );
+        let response;
+        if (filterRole) {
+          response = await apiService.admin.getUsersByRole(filterRole);
+        } else {
+          response = await apiService.admin.getAllUsers();
+        }
+        setUsers(response.data);
         setLoading(false);
       } catch (err) {
         setError('Failed to load user accounts');
@@ -216,7 +123,7 @@ const AdminDashboard: React.FC = () => {
     }
   }, [activeTab, filterRole]);
 
-  // Handle approving an upgrade request
+  // handle approving an upgrade request
   const handleApproveRequest = async (id: number) => {
     try {
       const request = pendingRequests.find(req => req.id === id);
@@ -224,46 +131,47 @@ const AdminDashboard: React.FC = () => {
       
       const clientData = {
         userAccountId: request.userAccountId,
-        // Add any other required fields
+        firstName: request.userFirstName,
+        lastName: request.userLastName,
+        email: request.userEmail
       };
       
-      // Uncomment for actual API call
-      // await adminApi.approveRequest(id, clientData);
+      await apiService.admin.approveRequest(id, clientData);
       
-      // Show success notification
+      // show success notification
       setNotification({
         type: 'success',
         message: `Successfully approved upgrade request for ${request.userFirstName} ${request.userLastName}`
       });
       
-      // Update the requests list
+      // update the requests list
       setPendingRequests(pendingRequests.filter(req => req.id !== id));
       
-      // Clear notification after 3 seconds
+      // clear notification after 3 seconds
       setTimeout(() => setNotification(null), 3000);
     } catch (err) {
       setError('Failed to approve request');
       console.error(err);
       
-      // Show error notification
+      // show error notification
       setNotification({
         type: 'error',
         message: 'Failed to approve the upgrade request. Please try again.'
       });
       
-      // Clear notification after 3 seconds
+      // clear notification after 3 seconds
       setTimeout(() => setNotification(null), 3000);
     }
   };
 
-  // Handle rejecting an upgrade request
+  // handle rejecting an upgrade request
   const handleRejectRequest = async (id: number) => {
     try {
       const request = pendingRequests.find(req => req.id === id);
       if (!request) return;
       
-      // Uncomment for actual API call
-      // await adminApi.rejectRequest(id, 'Request rejected by admin');
+      const reason = 'Request rejected by administrator.'; // You could show a modal to get this
+      await apiService.admin.rejectRequest(id, reason);
       
       // Show success notification
       setNotification({
@@ -271,61 +179,75 @@ const AdminDashboard: React.FC = () => {
         message: `Successfully rejected upgrade request for ${request.userFirstName} ${request.userLastName}`
       });
       
-      // Update the requests list
+      // update the requests list
       setPendingRequests(pendingRequests.filter(req => req.id !== id));
       
-      // Clear notification after 3 seconds
+      // clear notification after 3 seconds
       setTimeout(() => setNotification(null), 3000);
     } catch (err) {
       setError('Failed to reject request');
       console.error(err);
       
-      // Show error notification
+      // show error notification
       setNotification({
         type: 'error',
         message: 'Failed to reject the upgrade request. Please try again.'
       });
       
-      // Clear notification after 3 seconds
+      // clear notification after 3 seconds
       setTimeout(() => setNotification(null), 3000);
     }
   };
 
-  // Handle changing a user's role
+  // handle changing a user's role
   const handleChangeRole = async (userId: number, newRole: string) => {
     try {
-      // Uncomment for actual API call
-      // await adminApi.changeUserRole(userId, newRole);
+      await apiService.admin.changeUserRole(userId, newRole);
       
-      // Update user list UI
+      // update user list UI
       setUsers(users.map(user => 
         user.id === userId ? { ...user, role: newRole } : user
       ));
       
-      // Show success notification
+      // show success notification
       setNotification({
         type: 'success',
         message: `Successfully changed user's role to ${newRole}`
       });
       
-      // Clear notification after 3 seconds
+      // clear notification after 3 seconds
       setTimeout(() => setNotification(null), 3000);
     } catch (err) {
       setError('Failed to change user role');
       console.error(err);
       
-      // Show error notification
+      // show error notification
       setNotification({
         type: 'error',
         message: 'Failed to change user role. Please try again.'
       });
       
-      // Clear notification after 3 seconds
+      // clear notification after 3 seconds
       setTimeout(() => setNotification(null), 3000);
     }
   };
 
-  // Render system dashboard
+  // handle user logout with proper API call
+  const handleLogout = async () => {
+    try {
+      // call the logout function from useAuth which will trigger the backend API
+      await logout();
+      // redirect happens automatically in the logout function
+    } catch (err) {
+      console.error('Logout failed:', err);
+      setNotification({
+        type: 'error',
+        message: 'Logout failed. Please try again.'
+      });
+    }
+  };
+
+  // render system dashboard
   const renderDashboard = () => (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">System Dashboard</h2>
@@ -349,11 +271,17 @@ const AdminDashboard: React.FC = () => {
           <div className="bg-white p-4 rounded shadow">
             <h3 className="font-semibold text-gray-700">Employee Accounts</h3>
             <p className="text-3xl font-bold">{systemInfo.totalEmployeeAccounts}</p>
+            {systemInfo.countEmployeeRepo !== undefined && (
+              <p className="text-sm text-gray-500">Repository count: {systemInfo.countEmployeeRepo}</p>
+            )}
           </div>
           
           <div className="bg-white p-4 rounded shadow">
             <h3 className="font-semibold text-gray-700">Client Accounts</h3>
             <p className="text-3xl font-bold">{systemInfo.totalClientAccounts}</p>
+            {systemInfo.countClientRepo !== undefined && (
+              <p className="text-sm text-gray-500">Repository count: {systemInfo.countClientRepo}</p>
+            )}
           </div>
           
           <div className="bg-white p-4 rounded shadow">
@@ -378,7 +306,7 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  // Render pending upgrade requests
+  // render pending upgrade requests
   const renderRequests = () => (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Pending Upgrade Requests</h2>
@@ -434,7 +362,7 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  // Render user management
+  // render user management
   const renderUsers = () => (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">User Management</h2>
@@ -508,7 +436,10 @@ const AdminDashboard: React.FC = () => {
                         <option value={UserRole.Guest} disabled={user.role === UserRole.Guest}>Guest</option>
                       </select>
                       
-                      <button className="text-blue-500 hover:underline">
+                      <button 
+                        className="text-blue-500 hover:underline"
+                        onClick={() => window.location.href = `/users/edit/${user.id}`}
+                      >
                         Edit
                       </button>
                     </div>
@@ -596,10 +527,7 @@ const AdminDashboard: React.FC = () => {
           
           <div className="absolute bottom-4 left-4 right-4">
             <button
-              onClick={() => {
-                authUtils.clearAuthData();
-                window.location.href = '/login';
-              }}
+              onClick={handleLogout}
               className="w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 rounded"
             >
               Logout
@@ -636,4 +564,3 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
-
