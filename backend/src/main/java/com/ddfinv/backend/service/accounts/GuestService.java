@@ -2,6 +2,8 @@ package com.ddfinv.backend.service.accounts;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +70,17 @@ public class GuestService {
         // TODO: add a mechanism to notify admins / employees that a request is available?
 
         return true;
+    }
+
+    public List<UpgradeRequestDTO> getUserUpgradeRequests(Long userAccountId) throws ResourceNotFoundException {
+        UserAccount userAccount = userAccountRepository.findById(userAccountId)
+        .orElseThrow(() -> new ResourceNotFoundException("User account with the provided ID could not be found: "+ userAccountId));
+
+        List<GuestUpgradeRequest> requests = upgradeRequestRepository.findByUserAccountId(userAccount.getId());
+
+        return requests.stream().map(dtoMapper::toUpgradeRequestDTO)
+        .collect(Collectors.toList());
+
     }
 
 }
