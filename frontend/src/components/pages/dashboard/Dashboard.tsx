@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePermissions } from "../../../hooks/usePermissions";
-import { UserRole } from "../../../types/auth.types";
+import { UserRole, Permissions } from "../../../types/auth.types";
 import { ROUTES } from "../../../constants/router.constants";
 import { authUtils } from "../../../utils/auth.utils";
 import { apiService } from "../../../services/api.service";
@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
   const { logout } = useAuth();
   const user = authUtils.getUser();
   
-  // State for guest functionality
+  // state for guest functionality
   const [upgradeRequests, setUpgradeRequests] = useState<UpgradeRequest[]>([]);
   const [requestDetails, setRequestDetails] = useState("");
   const [showRequestForm, setShowRequestForm] = useState(false);
@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
   const [requestSuccess, setRequestSuccess] = useState<string | null>(null);
   const [dashboardLoading, setDashboardLoading] = useState(true);
 
-  // Redirect based on role
+  // redirect based on role
   useEffect(() => {
     if (!isLoading && !error) {
       if (hasRole(UserRole.Admin)) {
@@ -44,31 +44,31 @@ const Dashboard: React.FC = () => {
         navigate(ROUTES.CLIENT);
         return;
       } else if (hasRole(UserRole.Guest)) {
-        // For guests, we stay on this page and load their upgrade requests
+        // for guests, we stay on this page and load their upgrade requests
         loadGuestUpgradeRequests();
       }
       setDashboardLoading(false);
     }
   }, [hasRole, isLoading, error, navigate]);
 
-  // Load any existing upgrade requests for the guest
+  // load existing upgrade requests for guest
   const loadGuestUpgradeRequests = async () => {
     if (!user?.id) return;
     
     try {
-      // This endpoint would need to be added to the backend
+      // TODO: this endpoint needs to be added to backend, working now?
       const response = await apiService.auth.getUserUpgradeRequests(user.id);
       setUpgradeRequests(response.data);
     } catch (err) {
       console.error("Failed to load upgrade requests:", err);
-      // Initialize with empty array if the endpoint isn't available yet
+      // initialize with empty array if the endpoint isn't available yet
       setUpgradeRequests([]);
     } finally {
       setDashboardLoading(false);
     }
   };
 
-  // Handle submitting an upgrade request
+  // handle submitting an upgrade request
   const handleSubmitUpgradeRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -148,8 +148,8 @@ const Dashboard: React.FC = () => {
         )}
         
         {/* Request upgrade form toggle button */}
-        {!showRequestForm && hasPermission('REQUEST_CLIENT_ACCOUNT') && 
-         !upgradeRequests.some(req => req.status === 'PENDING') && (
+        {!showRequestForm && hasPermission(Permissions.REQUEST_CLIENT_ACCOUNT) &&
+        !upgradeRequests.some(req => req.status === 'PENDING') && (
           <button
             onClick={() => setShowRequestForm(true)}
             className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
