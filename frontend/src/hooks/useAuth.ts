@@ -24,9 +24,14 @@ export const useAuth = () => {
 
 
     try {
+      console.log("Attempting to authenticate the login attempt: ", { email });
       const response = await apiService.auth.login(email, password);
       // Store the token and user info
       const authData = response.data;
+      console.log("Authentication response: ", authData);
+      
+
+
 
       // attempt to map the strings of permissions to Permission enum values
       const mappedPermissions = authData.permissions ? authData.permissions.map((permString: string) =>{
