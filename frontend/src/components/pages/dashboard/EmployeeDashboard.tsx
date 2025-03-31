@@ -50,25 +50,27 @@ const EmployeeDashboard: React.FC = () => {
         // TODO: adjust the API endpoint late if need be
         const response = await apiService.employee.getEmployeeByUserId(user.id);
         setEmployee(response.data);
-        setLoading(false);
       } catch (err) {
         console.error('Failed to load employee details', err);
-        // fallback - try to find the employee by checking their email
-        try {
-          const allEmployeesResponse = await apiService.employee.getAllEmployees();
-          const employeeData = allEmployeesResponse.data.find(
-            (emp: Employee) => emp.email === user.email
-          );
-          if (employeeData) {
-            setEmployee(employeeData);
-          } else {
-            setError('Could not retrieve your employee profile');
+
+
+        // fallback - try to find the employee with getAll
+        if (!employee){
+          try {
+            const allEmployeesResponse = await apiService.employee.getAllEmployees();
+            const employeeData = allEmployeesResponse.data.find(
+              (emp: Employee) => emp.email === user.email
+            );
+            if (employeeData) {
+              setEmployee(employeeData);
+            }
+          } catch (fallbackErr) {
+            // dont set error state to maintain ui stability during dev
+            console.error('Fallback employee lookup failed:', fallbackErr);
+
+          } finally {
+            setLoading(false);
           }
-        } catch (fallbackErr) {
-          setError('Failed to load employee profile');
-          console.error('Fallback employee lookup failed:', fallbackErr);
-        } finally {
-          setLoading(false);
         }
       }
     };
@@ -79,22 +81,33 @@ const EmployeeDashboard: React.FC = () => {
   // fetch assigned clients
   useEffect(() => {
     const fetchClients = async () => {
+      try{
       setLoading(true);
-      
-      try {
-        if (employee?.employeeId) {
-          const response = await apiService.employee.getClientsByEmployeeId(employee.employeeId);
-          setClients(response.data);
-        } else {
-          // if no employee ID yet, fetch all clients (simplified)
-          const response = await apiService.employee.getAllClients();
-          setClients(response.data);
+      let clientList = [];
+
+
+        try {
+          if (employee?.employeeId) {
+            const response = await apiService.employee.getClientsByEmployeeId(employee.employeeId);
+            clientList = response.data;
+          } else {
+            // if no employee ID yet, fetch all clients (simplified)
+            const response = await apiService.employee.getAllClients();
+            clientList = response.data;
+          }
+        } catch (err) {
+          console.error("Failed to load the client list data: ", err);
+          // set list as empty when err occurs
+          clientList = [];
         }
-      } catch (err) {
-        setError('Failed to load client information');
-        console.error(err);
-      } finally {
+        setClients(clientList);
         setLoading(false);
+
+      } catch (err){
+          console.error("An error occurred while fetching client: ", err);
+          setClients([]);
+          setLoading(false);
+
       }
     };
 
