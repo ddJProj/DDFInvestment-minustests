@@ -26,78 +26,59 @@ export const useAuth = () => {
     try {
       console.log("Attempting to authenticate the login attempt: ", { email });
       const response = await apiService.auth.login(email, password);
+      
       // Store the token and user info
       const authData = response.data;
       console.log("Authentication response: ", authData);
-      
-
 
 
       // attempt to map the strings of permissions to Permission enum values
-      const mappedPermissions = authData.permissions ? authData.permissions.map((permString: string) =>{
+      const mappedPermissions = authData.permissions ? authData.permissions.map((permString: string) => {
         return Permissions[permString as keyof typeof Permissions] || null;
       }).filter(Boolean) : [];
 
-
-      // TODO: add logic to extract role from JWT payload?
       const userData = {
         id: authData.id || 0, // if one isnt provided automatically by db/backend
         email: authData.email || email,
         firstName: authData.firstName || '',
-        lastName: authData.lastName ||  '',
+        lastName: authData.lastName || '',
         role: authData.role || UserRole.Guest, // fallback to userRole Guest / limited permission
         permissions: mappedPermissions
       };
 
+      console.log("Storing user data with role:", userData.role);
       authUtils.setAuthData(authData.token, userData);
       setIsAuthenticated(true);
+      
 
       // the main dashboard will handle role specific navigation
-      navigate(ROUTES.DASHBOARD);
+      window.location.href = ROUTES.DASHBOARD;
 
-      /* console logging for testing:
+      // console logging for testing:
       console.log("Role from auth response:", userData.role);
-      console.log("Admin enum value:", UserRole.Admin);
-      console.log("Routes.ADMIN:", ROUTES.ADMIN);
+      //console.log("Admin enum value:", UserRole.Admin);
+      //console.log("Routes.ADMIN:", ROUTES.ADMIN);
 
       // comparing the roles:
       console.log("Role matches Admin?", userData.role === UserRole.Admin);
       console.log("Role matches Employee?", userData.role === UserRole.Employee);
       console.log("Role matches Client?", userData.role === UserRole.Client);
       console.log("Role matches Guest?", userData.role === UserRole.Guest);
-      */
-      // redirect based on role
-      // switch(userData.role){
-      //   case UserRole.Admin:
-      //     console.log("Navigating to admin dashboard...");
-      //     setTimeout(() => {
-      //       navigate(ROUTES.ADMIN);
-      //       console.log("Navigation should have completed");
-      //     }, 100);
-      //     break;
-      //   case UserRole.Employee:
-      //     navigate(ROUTES.EMPLOYEE);
-      //     break;
-      //   case UserRole.Client:
-      //     navigate(ROUTES.CLIENT);
-      //     break;
-      //   default:
-      //     navigate(ROUTES.DASHBOARD);
-      // }
+
 
       return true;
-
     } catch (err: any) {
-      console.error('Error logging in: ', err);  // added to troubleshoot
+      console.error('Error logging in: ', err);
       setError(
         err.response?.data?.message ||
-          'Login failed. Please check your credentials.'
+        'Login failed. Please check your credentials.'
       );
       return false;
     } finally {
       setLoading(false);
     }
-  };
+};
+
 
   const register = async (
     firstName: string,
