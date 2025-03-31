@@ -46,11 +46,11 @@ public class GuestController {
         return ResponseEntity.ok(success);
     }
 
-    @GetMapping("/upgrade-requests/{userAccountId}")
-    public ResponseEntity<?> getUserUpgradeRequests(@PathVariable Long userAccountId) throws ResourceNotFoundException {
-        List<UpgradeRequestDTO> requests = guestService.getUserUpgradeRequests(userAccountId);
-        return ResponseEntity.ok(requests);
-    }
+    // @GetMapping("/upgrade-requests/{userAccountId}")
+    // public ResponseEntity<?> getUserUpgradeRequests(@PathVariable Long userAccountId) throws ResourceNotFoundException {
+    //     List<UpgradeRequestDTO> requests = guestService.getUserUpgradeRequests(userAccountId);
+    //     return ResponseEntity.ok(requests);
+    // }
     
         
 }
