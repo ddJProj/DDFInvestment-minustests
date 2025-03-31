@@ -31,25 +31,48 @@ const Dashboard: React.FC = () => {
   const [requestSuccess, setRequestSuccess] = useState<string | null>(null);
   const [dashboardLoading, setDashboardLoading] = useState(true);
 
-  // redirect based on role
-  useEffect(() => {
-    if (!isLoading && !error) {
-      if (hasRole(UserRole.Admin)) {
-        navigate(ROUTES.ADMIN);
-        return;
-      } else if (hasRole(UserRole.Employee)) {
-        navigate(ROUTES.EMPLOYEE);
-        return;
-      } else if (hasRole(UserRole.Client)) {
-        navigate(ROUTES.CLIENT);
-        return;
-      } else if (hasRole(UserRole.Guest)) {
-        // for guests, we stay on this page and load their upgrade requests
-        loadGuestUpgradeRequests();
-      }
-      setDashboardLoading(false);
+
+
+// redirect based on role
+useEffect(() => {
+  console.log("Dashboard useEffect triggered with:", {
+    isLoading,
+    hasError: !!error,
+    user,
+    userRole: user?.role,
+    isAdmin: hasRole(UserRole.Admin),
+    isEmployee: hasRole(UserRole.Employee),
+    isClient: hasRole(UserRole.Client),
+    isGuest: hasRole(UserRole.Guest)
+  });
+
+  if (!isLoading && !error) {
+    if (hasRole(UserRole.Admin)) {
+      console.log("Redirecting to admin dashboard");
+      navigate(ROUTES.ADMIN);
+      return;
+    } else if (hasRole(UserRole.Employee)) {
+      console.log("Redirecting to employee dashboard");
+      navigate(ROUTES.EMPLOYEE);
+      return;
+    } else if (hasRole(UserRole.Client)) {
+      console.log("Redirecting to client dashboard");
+      navigate(ROUTES.CLIENT);
+      return;
+    } else if (hasRole(UserRole.Guest)) {
+      console.log("Staying on guest dashboard, loading requests");
+      // for guests, we stay on this page and load their upgrade requests
+      loadGuestUpgradeRequests();
     }
-  }, [hasRole, isLoading, error, navigate]);
+    setDashboardLoading(false);
+  }
+}, [hasRole, isLoading, error, navigate, user]); // user is now a dependency
+
+
+
+
+
+
 
   // load existing upgrade requests for guest
   const loadGuestUpgradeRequests = async () => {
