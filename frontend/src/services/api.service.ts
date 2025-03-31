@@ -30,19 +30,26 @@ axiosInstance.interceptors.request.use(
 );
 
 // response interceptor to handle common errors
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // added to improve error tracking/handling
-    console.error('API error: ', error.request?.status, error.response?.data); 
-    // token expiration
-    if (error.response && error.response.status === 401) {
-      authUtils.clearAuthData();
-      window.location.href = '/login';
+  axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      // added to improve error tracking/handling
+      console.error('API error: ', error.request?.status, error.response?.data); 
+      
+      // dont clear token for specific endpoints
+      const isAuthEndpoint = error.config?.url?.includes('/api/auth/');
+      const isAdminEndpoint = error.config?.url?.includes('/api/admin/');
+      
+      // token expiration: only redirect auth errors for non-admin and non-auth endpoints
+      // only log out on 401 (unauthorized) not 403 (forbidden)
+      if (error.response && error.response.status === 401) {
+        console.log("Unauthorized access detected (401), logging out");
+        authUtils.clearAuthData();
+        window.location.href = '/login';
+      }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
-);
+  );
 
 
 // API service endpoints
