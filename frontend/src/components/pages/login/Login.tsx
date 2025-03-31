@@ -9,6 +9,7 @@ import { ROUTES } from "../../../constants/router.constants";
 import logo from "../../../assets/dd-asset-management-high-resolution-logo-transparent.svg";
 import { testDirectAuth } from "../../../services/api.service";
 import axios from "axios";
+import { authUtils } from "../../../utils/auth.utils";
 
 
 const loginSchema = z.object({
@@ -30,6 +31,8 @@ const Login: React.FC = () => {
   const { handleLogin } = useLogin();
 
   const onSubmit = async (data: LoginFormInputs) => {
+    authUtils.clearAuthData();
+
     await handleLogin(data.email, data.password);
   };
 
