@@ -2,7 +2,7 @@
 //import viteLogo from '/vite.svg'
 // src/App.tsx
 import React, { createContext, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Login from './components/pages/login/Login';
 import Registration from './components/pages/login/Registration';
 import AdminDashboard from './components/pages/dashboard/AdminDashboard';
@@ -13,6 +13,7 @@ import UnauthorizedPage from './components/pages/errors/UnauthorizedPage';
 import { authUtils } from './utils/auth.utils';
 import { UserRole } from './types/auth.types';
 import { ROUTES } from "./constants/router.constants";
+import ProtectedRoute from './routes/ProtectedRoute';
 
 // Create auth context for global state management
 export const AuthContext = createContext<{
@@ -26,98 +27,108 @@ export const AuthContext = createContext<{
 });
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(authUtils.isAuthenticated());
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Check authentication status on mount
+    // Check authentication status on mount and when storage changes
     const checkAuth = () => {
       const isAuth = authUtils.isAuthenticated();
+      console.log("App.tsx: Checking auth state:", isAuth);
       setIsAuthenticated(isAuth);
       
       if (isAuth) {
         const user = authUtils.getUser();
         setUserRole(user?.role || null);
+        console.log("App.tsx: User authenticated with role:", user?.role);
+      } else {
+        setUserRole(null);
+        console.log("App.tsx: User not authenticated");
       }
       
       setIsLoading(false);
     };
     
     checkAuth();
+    
+    // Add event listener for storage changes to keep auth state in sync
+    window.addEventListener('storage', checkAuth);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+    };
   }, []);
 
   const logout = () => {
+    console.log("App.tsx: Logging out user");
     authUtils.clearAuthData();
     setIsAuthenticated(false);
     setUserRole(null);
-  };
-
-  // Protected route component
-  const ProtectedRoute = ({ 
-    children, 
-    allowedRoles = [] 
-  }: { 
-    children: React.ReactNode; 
-    allowedRoles?: string[];
-  }) => {
-    if (!isAuthenticated) {
-      return <Navigate to={ROUTES.LOGIN} />;
-    }
-
-    if (allowedRoles.length > 0 && userRole && !allowedRoles.includes(userRole)) {
-      return <Navigate to={ROUTES.UNAUTHORIZED} />;
-    }
-
-    return <>{children}</>;
+    window.location.href = ROUTES.LOGIN;
   };
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, userRole, logout }}>
         <Routes>
           {/* Public Routes */}
-          <Route path={ROUTES.LOGIN} element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} /> : <Login />} />
-          <Route path={ROUTES.REGISTER} element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} /> : <Registration />} />
+          <Route 
+            path={ROUTES.LOGIN} 
+            element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} /> : <Login />} 
+          />
+          
+          <Route 
+            path={ROUTES.REGISTER} 
+            element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} /> : <Registration />} 
+          />
+          
           <Route path={ROUTES.UNAUTHORIZED} element={<UnauthorizedPage />} />
           
           {/* Protected Routes */}
           <Route 
             path={ROUTES.DASHBOARD}
             element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
+              <ProtectedRoute 
+                element={<Dashboard />} 
+                isProtected={true} 
+              />
             } 
           />
           
           <Route 
             path={ROUTES.ADMIN}
             element={
-              <ProtectedRoute allowedRoles={[UserRole.Admin]}>
-                <AdminDashboard />
-              </ProtectedRoute>
+              <ProtectedRoute 
+                element={<AdminDashboard />} 
+                isProtected={true} 
+                roles={[UserRole.Admin]}
+              />
             } 
           />
           
           <Route 
             path={ROUTES.EMPLOYEE}
             element={
-              <ProtectedRoute allowedRoles={[UserRole.Employee]}>
-                <EmployeeDashboard />
-              </ProtectedRoute>
+              <ProtectedRoute 
+                element={<EmployeeDashboard />} 
+                isProtected={true} 
+                roles={[UserRole.Employee]}
+              />
             } 
           />
           
           <Route 
             path={ROUTES.CLIENT}
             element={
-              <ProtectedRoute allowedRoles={[UserRole.Client]}>
-                <ClientDashboard />
-              </ProtectedRoute>
+              <ProtectedRoute 
+                element={<ClientDashboard />} 
+                isProtected={true} 
+                roles={[UserRole.Client]}
+              />
             } 
           />
           
