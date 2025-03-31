@@ -72,15 +72,6 @@ public class GuestService {
         return true;
     }
 
-    public List<UpgradeRequestDTO> getUserUpgradeRequests(Long userAccountId) throws ResourceNotFoundException {
-        UserAccount userAccount = userAccountRepository.findById(userAccountId)
-        .orElseThrow(() -> new ResourceNotFoundException("User account with the provided ID could not be found: "+ userAccountId));
 
-        List<GuestUpgradeRequest> requests = upgradeRequestRepository.findByUserAccountId(userAccount.getId());
-
-        return requests.stream().map(dtoMapper::toUpgradeRequestDTO)
-        .collect(Collectors.toList());
-
-    }
 
 }
