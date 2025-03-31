@@ -38,6 +38,7 @@ import com.ddfinv.backend.controller.auth.JwtAuthenticationFilter;
 
 
 import com.ddfinv.backend.service.UserDetailService;
+import com.ddfinv.backend.service.auth.JwtService;
 import com.ddfinv.core.service.EntityPermissionEvaluator;
 import com.ddfinv.core.service.PermissionEvaluator;
 
@@ -46,13 +47,16 @@ import com.ddfinv.core.service.PermissionEvaluator;
 @EnableMethodSecurity
 public class SecurityBeansConfig {
 
+    private final JwtService jwtService;
+
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
     
-    public SecurityBeansConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailService userDetailsService){
+    public SecurityBeansConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailService userDetailsService, JwtService jwtService){
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
+        this.jwtService = jwtService;
     }
 
 
@@ -87,6 +91,8 @@ public class SecurityBeansConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
 
@@ -111,11 +117,11 @@ public class SecurityBeansConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        //configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept"));
-        //configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        //configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);
-        //configuration.setMaxAge(3600L);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
