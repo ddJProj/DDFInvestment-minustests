@@ -45,8 +45,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         System.out.println("Authorization header: " + (request.getHeader("Authorization") != null ? "Present" : "Missing"));
 
 
-        
+
         final String path = request.getRequestURI();
+        // skipping token validation for auth endpoints
         if (path.contains("/api/auth/")){
             filterChain.doFilter(request, response);
             return;
@@ -54,7 +55,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                     
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
         final String userEmail;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
@@ -62,7 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
             return;
         }
 
-        jwt = authHeader.substring(7);
+        try{
+
+        String jwt = authHeader.substring(7);
 
         // checking if token is no longer valid / user logged out, etc.
         if(tokenBlacklistService.isTokenBlackListed(jwt)){
@@ -84,6 +86,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
             }
         }
+
+    }catch(Exception e){
+        logger.error("JWT related authentication error occurred: ", e);
+
+    }
         filterChain.doFilter(request, response);
     
     }
