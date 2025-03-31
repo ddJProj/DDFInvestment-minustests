@@ -28,11 +28,17 @@ export function usePermissions(): UsePermissionsResult {
     const token = localStorage.getItem("authToken");
     if (token) {
       setIsLoading(true);
+      console.log("Loading permissions for this token", token.substring(0, 15) + "...");
+
 
       const userData = authUtils.getUser();
+      console.log("Permissions data loaded: ", userData);
+
+
 
       if (userData){
         const userRole = userData.role as UserRole
+        console.log("Setting userRole to: ", userRole);
         setRole(userRole);
 
         const rolePermissions = computeRolePermissions(userRole);
