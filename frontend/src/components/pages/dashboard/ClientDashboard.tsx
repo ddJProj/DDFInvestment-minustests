@@ -45,51 +45,55 @@ const ClientDashboard: React.FC = () => {
       
       try {
         setLoading(true);
+        let clientData = null;
         
         // Get client by user account ID
         try {
           const clientResponse = await apiService.client.getClientByUserId(user.id);
-          setClient(clientResponse.data);
+          clientData = clientResponse.data;
+          setClient(clientData);
         } catch (clientErr) {
           console.error('Error fetching client by user ID:', clientErr);
-          
-          // Fallback: try to find client by checking all clients
-          const allClientsResponse = await apiService.client.getAllClients();
-          const clientData = allClientsResponse.data.find(
-            (cl: Client) => cl.userAccountId === user.id
-          );
-          
-          if (clientData) {
-            setClient(clientData);
-          } else {
-            setError('Could not retrieve your client profile');
+          }
+        
+        
+        if (!clientData){
+          try{
+            const allClientDataResponse = await apiService.client.getAllClients();
+            clientData = allClientDataResponse.data.find(
+              (client: Client) => client.userAccountId === user.id
+            );
+            if (clientData){
+              setClient(clientData);
+            }
+          }catch(fbErr){
+            console.error("Fallback lookup method unsuccessful: ", fbErr);
           }
         }
-        
         // Once we have the client data, fetch their investments
         if (client?.clientId) {
           try {
-            const investmentsResponse = await apiService.client.getClientInvestments(client.clientId);
+            const investmentsResponse = await apiService.client.getClientInvestments(clientData.clientId);
             setInvestments(investmentsResponse.data);
           } catch (investmentErr) {
             console.warn('Error fetching investments:', investmentErr);
-            // In case the investments API isn't fully implemented yet, use sample data
+            // until investments API is fully implemented, use sample data
             setInvestments([
               {
                 id: 1,
-                name: 'Tech Growth Fund',
+                name: 'Tech Sample Investment',
                 type: 'Mutual Fund',
                 amount: 10000,
-                date: '2024-01-15',
+                date: new Date().toISOString(),
                 status: 'Active',
                 clientId: client.clientId
               },
               {
                 id: 2,
-                name: 'Green Energy ETF',
+                name: 'Bank Sample Investment',
                 type: 'ETF',
                 amount: 5000,
-                date: '2024-02-20',
+                date: new Date().toISOString(),
                 status: 'Active',
                 clientId: client.clientId
               }
@@ -100,7 +104,6 @@ const ClientDashboard: React.FC = () => {
         setLoading(false);
       } catch (err) {
         setError('Failed to load client information');
-        console.error(err);
         setLoading(false);
       }
     };
