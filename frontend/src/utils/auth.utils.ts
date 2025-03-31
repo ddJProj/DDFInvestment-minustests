@@ -17,9 +17,16 @@ export const authUtils = {
    * @param user - User data
    */
   setAuthData(token: string, user: Record<string, any>): void {
-    localStorage.setItem(AUTH_KEYS.ACCESS_TOKEN, token);
-    localStorage.setItem(AUTH_KEYS.USER, JSON.stringify(user));
+    try {
+      // use localStorage instead of sessionStorage persistence
+      localStorage.setItem(AUTH_KEYS.ACCESS_TOKEN, token);
+      localStorage.setItem(AUTH_KEYS.USER, JSON.stringify(user));
+      console.log("Auth data stored successfully:", { tokenSaved: !!token, userSaved: !!user });
+    } catch (error) {
+      console.error("Error storing auth data:", error);
+    }
   },
+
 
   /**
    * Retrieves the stored token.
@@ -34,14 +41,20 @@ export const authUtils = {
    * @returns User data object or null
    */
   getUser(): Record<string, any> | null {
-    const user = localStorage.getItem(AUTH_KEYS.USER);
-    return user ? JSON.parse(user) : null;
+    try {
+      const user = localStorage.getItem(AUTH_KEYS.USER);
+      return user ? JSON.parse(user) : null;
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      return null;
+    }
   },
 
   /**
    * Clears all authentication data from storage.
    */
   clearAuthData(): void {
+    console.log("Clearing auth data");
     localStorage.removeItem(AUTH_KEYS.ACCESS_TOKEN);
     localStorage.removeItem(AUTH_KEYS.USER);
   },
@@ -50,17 +63,35 @@ export const authUtils = {
    * Checks if the stored token is valid and not expired.
    * @returns Whether the token is valid
    */
-  isAuthenticated(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
+// In auth.utils.ts, modify isAuthenticated()
+isAuthenticated(): boolean {
+  const token = this.getToken();
+  console.log("Is authenticated check - token located: ", !!token);
+  
+  if (!token) return false;
 
-    try {
-      const { exp } = jwtDecode<TokenPayload>(token);
-      return exp ? exp > Math.floor(Date.now() / 1000) : false;
-    } catch {
-      return false;
-    }
-  },
+  try {
+    const decoded = jwtDecode<TokenPayload>(token);
+    console.log("Token decoded successfully", decoded);
+    
+    const exp = decoded.exp;
+    const now = Math.floor(Date.now() / 1000);
+    const isValid = exp ? exp > now : false;
+    
+    console.log("Token validation:", {
+      expiry: exp ? new Date(exp * 1000).toISOString() : 'none',
+      currentTime: new Date(now * 1000).toISOString(),
+      isValid
+    });
+    
+    return isValid;
+  } catch (error) {
+    console.error("Token decode error:", error);
+    // Don't clear token on decode error
+    return false;
+  }
+},
+
 
   /**
    * Refreshes the token if close to expiration.
@@ -75,5 +106,6 @@ export const authUtils = {
     const currentTime = Math.floor(Date.now() / 1000);
     return exp ? exp - currentTime < thresholdMinutes * 60 : false;
   },
+
 };
 
