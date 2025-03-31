@@ -49,8 +49,20 @@ public class UpgradeRequestService {
 
     }
 
-    public List<UpgradeRequestDTO> getExistinUpgradeRequests(){
+    public List<UpgradeRequestDTO> getPendingUpgradeRequests(){
         return getRequestsByStatus(UpgradeRequestStatus.PENDING);
+    }
+
+
+    public List<UpgradeRequestDTO> getUserUpgradeRequestsById(Long userAccountId) throws ResourceNotFoundException {
+        UserAccount userAccount = userAccountRepository.findById(userAccountId)
+        .orElseThrow(() -> new ResourceNotFoundException("User account with the provided ID could not be found: "+ userAccountId));
+
+        List<GuestUpgradeRequest> requests = upgradeRequestRepository.findByUserAccountId(userAccount.getId());
+
+        return requests.stream().map(dtoMapper::toUpgradeRequestDTO)
+        .collect(Collectors.toList());
+
     }
 
     @Transactional
@@ -85,7 +97,6 @@ public class UpgradeRequestService {
             throw new InputException("Can only reject requests that are in the pending state.");
         }
 
- 
         request.setStatus(UpgradeRequestStatus.REJECTED);
         request.setDetails("Reason for Rejection: " + rejectionReason);
 
