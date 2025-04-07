@@ -1,6 +1,7 @@
 package com.ddfinv.backend.service.actions;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,8 +13,10 @@ import com.ddfinv.backend.exception.ApplicationException;
 import com.ddfinv.backend.exception.validation.InputException;
 
 import com.ddfinv.backend.exception.ResourceNotFoundException;
+import com.ddfinv.backend.repository.ClientRepository;
 import com.ddfinv.backend.repository.UpgradeRequestRepository;
 import com.ddfinv.backend.service.accounts.ClientService;
+import com.ddfinv.core.domain.Client;
 import com.ddfinv.core.domain.GuestUpgradeRequest;
 import com.ddfinv.core.domain.UserAccount;
 import com.ddfinv.core.domain.enums.UpgradeRequestStatus;
@@ -28,14 +31,17 @@ import jakarta.transaction.Transactional;
 @Service
 public class UpgradeRequestService {
 
+    private final ClientRepository clientRepository;
+
     private final UpgradeRequestRepository upgradeRequestRepository;
     private final UserAccountRepository userAccountRepository;
     private final ClientService clientService;
     private final DTOMapper dtoMapper;
 
     public UpgradeRequestService(UpgradeRequestRepository upgradeRequestRepository, 
-    UserAccountRepository userAccountRepository, ClientService clientService, DTOMapper dtoMapper){
+    UserAccountRepository userAccountRepository, ClientService clientService, DTOMapper dtoMapper, ClientRepository clientRepository){
         this.clientService = clientService;
+        this.clientRepository = clientRepository;
         this.dtoMapper = dtoMapper;
         this.userAccountRepository  =userAccountRepository;
         this.upgradeRequestRepository = upgradeRequestRepository;
@@ -75,6 +81,13 @@ public class UpgradeRequestService {
         }
 
         UserAccount userAccount = request.getUserAccount();;
+
+        Optional<Client> previouslyClient = clientRepository.findByUserAccount(userAccount);
+        if (previouslyClient.isPresent()){
+            Client client = previouslyClient.get();
+
+            
+        }
 
         clientDTO.setUserAccountId(userAccount.getId());
 
