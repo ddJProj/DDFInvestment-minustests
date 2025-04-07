@@ -48,14 +48,20 @@ public class ClientService {
         Employee assignedEmployee = null;
         if (dto.getAssignedEmployeeId() != null) {
             assignedEmployee = employeeRepository.findByEmployeeId(dto.getAssignedEmployeeId()).orElseThrow(() -> new RuntimeException("An assigned employee with that ID was not found."));
+        } else {
+            // else set the default employee to the first employee in the repository 
+            assignedEmployee = employeeRepository.findById(1L)
+            .orElse(employeeRepository.findAll().stream().findFirst().orElse(null));
         }
 
         Client newClient = new Client();
         newClient.setUserAccount(userAccount);
         newClient.setAssignedEmployee(assignedEmployee);
-        newClient.setClientId(createNewClientId(newClient)); // FIXME: add methods to create new clientID ie. add location tag to the Client.id value
 
-        Client storedClient = clientRepository.save(newClient);
+        Client saveClient = clientRepository.save(newClient);
+        saveClient.setClientId(createNewClientId(saveClient)); // FIXME: add better method to create new clientID ie. add location tag to the Client.id value
+
+        Client storedClient = clientRepository.save(saveClient);
         return dtoMapper.toClientDTO(storedClient);
 
     }
@@ -63,7 +69,13 @@ public class ClientService {
 
 
     public String createNewClientId(Client client){
-        return "" + client.getAssignedEmployee().getLocationId() + client.getId() + "";
+        String locationId = "HOMEBASE";
+
+        if (client.getAssignedEmployee() != null){
+            locationId = "" + client.getAssignedEmployee().getLocationId() + "";
+        }
+
+        return locationId + "-" + client.getId() + "";
     }
 
     @Transactional
