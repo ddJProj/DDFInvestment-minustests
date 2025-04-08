@@ -1,2 +1,3 @@
-rootProject.name = 'DDFInvestment'
-include 'core', 'backend'
+rootProject.name = 'ddfinv'
+include 'core'
+include 'backend'
