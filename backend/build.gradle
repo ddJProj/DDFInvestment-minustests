@@ -35,6 +35,7 @@ dependencies {
     testImplementation 'org.junit.platform:junit-platform-console:1.9.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'com.h2database:h2'
 
 }
 
