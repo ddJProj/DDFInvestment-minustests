@@ -3,96 +3,98 @@ package com.ddfinv.backend.dto.accounts;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class ClientDTOTest {
 
-    @BeforeEach
-    void setUp() {
-    }
+    // @BeforeEach
+    // void setUp() {
+    // }
 
-    @AfterEach
-    void tearDown() {
-    }
+    // @AfterEach
+    // void tearDown() {
+    // }
 
-    @Test
-    void getId() {
-    }
+    // @Test
+    // void getId() {
+    // }
 
-    @Test
-    void getClientId() {
-    }
+    // @Test
+    // void getClientId() {
+    // }
 
-    @Test
-    void getUserAccountId() {
-    }
+    // @Test
+    // void getUserAccountId() {
+    // }
 
-    @Test
-    void getFirstName() {
-    }
+    // @Test
+    // void getFirstName() {
+    // }
 
-    @Test
-    void getLastName() {
-    }
+    // @Test
+    // void getLastName() {
+    // }
 
-    @Test
-    void getEmail() {
-    }
+    // @Test
+    // void getEmail() {
+    // }
 
-    @Test
-    void getAssignedEmployeeId() {
-    }
+    // @Test
+    // void getAssignedEmployeeId() {
+    // }
 
-    @Test
-    void getAssignedEmployeeName() {
-    }
+    // @Test
+    // void getAssignedEmployeeName() {
+    // }
 
-    @Test
-    void setId() {
-    }
+    // @Test
+    // void setId() {
+    // }
 
-    @Test
-    void setClientId() {
-    }
+    // @Test
+    // void setClientId() {
+    // }
 
-    @Test
-    void setUserAccountId() {
-    }
+    // @Test
+    // void setUserAccountId() {
+    // }
 
-    @Test
-    void setFirstName() {
-    }
+    // @Test
+    // void setFirstName() {
+    // }
 
-    @Test
-    void setLastName() {
-    }
+    // @Test
+    // void setLastName() {
+    // }
 
-    @Test
-    void setEmail() {
-    }
+    // @Test
+    // void setEmail() {
+    // }
 
-    @Test
-    void setAssignedEmployeeId() {
-    }
+    // @Test
+    // void setAssignedEmployeeId() {
+    // }
 
-    @Test
-    void setAssignedEmployeeName() {
-    }
+    // @Test
+    // void setAssignedEmployeeName() {
+    // }
 
-    @Test
-    void testEquals() {
-    }
+    // @Test
+    // void testEquals() {
+    // }
 
-    @Test
-    void canEqual() {
-    }
+    // @Test
+    // void canEqual() {
+    // }
 
-    @Test
-    void testHashCode() {
-    }
+    // @Test
+    // void testHashCode() {
+    // }
 
-    @Test
-    void testToString() {
-    }
+    // @Test
+    // void testToString() {
+    // }
 }
