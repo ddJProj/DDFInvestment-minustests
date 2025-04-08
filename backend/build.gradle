@@ -30,8 +30,19 @@ dependencies {
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter' 
+    testImplementation 'org.junit.platform:junit-platform-console:1.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+}
+
+test {
+    useJUnitPlatform()
 }
 
 springBoot {
     mainClass = 'com.ddfinv.backend.DdfInvestmentApplication'
 }
+
